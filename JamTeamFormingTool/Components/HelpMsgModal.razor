@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+
+@if (helpMsg != null)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6>
+                        @foreach (string line in helpMsg.Split("\n"))
+                        {
+                            @line
+                            <br />
+                        }
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="(e => { helpMsg = null; helpMsgCallback(); })" class="btn btn-primary">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? helpMsg { get; set; }
+
+    [Parameter]
+    public Action helpMsgCallback { get; set; } = () => { };
+}

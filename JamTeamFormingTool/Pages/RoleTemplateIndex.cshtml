@@ -1,0 +1,51 @@
+﻿@page
+@model JamTeamFormingTool.Pages.RoleTemplateIndexModel
+
+@{
+    ViewData["Title"] = "Role templates";
+}
+
+<h1>Role templates</h1>
+<p>Role templates are criteria made for team forming sessions. Every team forming session is derived from a role template.
+</p>
+<p>
+    @(await Html.RenderComponentAsync<Components.RoleTemplate.CreateNewButton>(RenderMode.ServerPrerendered))
+</p>
+<p>
+    @(await Html.RenderComponentAsync<Components.RoleTemplate.ViewPendingButton>(RenderMode.ServerPrerendered))
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoleTemplate[0].Name)
+            </th> 
+            <th>Role count</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.RoleTemplate)
+        {
+            @if (!item.IsStaged)
+            {
+                <tr>
+                    <td>
+                        <a asp-page="./RoleTemplateDetails" asp-route-name="@item.Name">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+                    <td>
+                        @item.Roles.Count
+                    </td>
+                    <td>
+                        @if (item.Description != null)
+                        {
+                            @Html.Raw(item.Description.Replace("\n", "<br />"))
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script src="_framework/blazor.server.js"></script>

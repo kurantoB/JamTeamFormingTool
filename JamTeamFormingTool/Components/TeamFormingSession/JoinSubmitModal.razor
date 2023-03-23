@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+@inject NavigationManager NavigationManager;
+
+@if (SubmitStatus != null)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6>
+                        @HelpMsg
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    @if (SubmitStatus == "success")
+                    {
+                        <button type="button" @onclick="(e => { SubmitStatus = null; Callback(); })" class="btn btn-primary">Ok</button>
+                    } else
+                    {
+                        <button type="button" @onclick="(e => SubmitStatus = null)" class="btn btn-primary">Back</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? HelpMsg { get; set; }
+
+    [Parameter]
+    public string? SubmitStatus { get; set; }
+
+    [Parameter]
+    public int SessionID { get; set; }
+
+    [Parameter]
+    public string? SessionPassCode { get; set; }
+
+    public void Callback()
+    {
+        if (SessionPassCode != null)
+        {
+            NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + SessionID + "&passcode=" + SessionPassCode, true);
+        } else
+        {
+            NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + SessionID, true);
+        }
+    }
+}

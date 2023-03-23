@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+
+@if (confirmMsg != null)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h6>
+                        @foreach (string line in confirmMsg.Split("\n"))
+                        {
+                            @line
+                            <br />
+                        }
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="(e => { confirmMsg = null; confirmCallback(); })" class="btn btn-primary">Ok</button>
+                    <button type="button" @onclick="(e => { confirmMsg = null; confirmDeniedCallback(); })" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? confirmMsg { get; set; }
+
+    [Parameter]
+    public Action confirmCallback { get; set; } = null!;
+
+    [Parameter]
+    public Action confirmDeniedCallback { get; set; } = null!;
+}

@@ -1,0 +1,52 @@
+﻿@using JamTeamFormingTool.Services;
+@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject RoleTemplateService RoleTemplateService;
+@inject NavigationManager NavigationManager;
+
+
+<button @onclick="(e => viewPendingClicked())" class="btn btn-primary">View pending</button>
+<HelpMsgModal helpMsg="@helpMsg" helpMsgCallback="() => { helpMsg = null; helpMsgCallback(); }" />
+@if (showPrompt)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Enter the pending role template's name:</p>
+                    <p><input type="text" @bind-value="@roleTemplateName" /></p>
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="(e => { showPrompt = false; viewPendingCallback(); })" class="btn btn-primary">Go</button>
+                    <button @onclick="(e => showPrompt = false)" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool showPrompt = false;
+    private string? roleTemplateName;
+
+    private string? helpMsg;
+    private Action helpMsgCallback = () => { };
+
+    private Action viewPendingCallback = () => { };
+
+    private void viewPendingClicked()
+    {
+        showPrompt = true;
+        viewPendingCallback = () =>
+        {
+            RoleTemplate? maybeRoleTemplate = RoleTemplateService.Retrieve(roleTemplateName);
+            if (maybeRoleTemplate != null && maybeRoleTemplate.IsStaged)
+            {
+                NavigationManager.NavigateTo("/RoleTemplateDetails?name=" + maybeRoleTemplate.Name, true);
+            } else
+            {
+                helpMsg = $"Unable to retrieve pending role template with name [{ roleTemplateName }].";
+            }
+        };
+    }
+}

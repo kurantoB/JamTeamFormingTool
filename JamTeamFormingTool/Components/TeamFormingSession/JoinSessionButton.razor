@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject JamTeamFormingTool.Services.JamTeamFormingSessionService SessionService;
+@inject NavigationManager NavigationManager;
+
+<HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => { HelpMsg = null; }" />
+@if (ShowTeamParticipantPrompt)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>You are a -</p>
+                </div>
+                <div class="modal-body">
+                    <button @onclick="(e => { ShowTeamParticipantPrompt = false; JoinInitiated(ParticipationMode.Participant); })" class="btn btn-primary">Team seeker</button> 
+                    <button @onclick="(e => { ShowTeamParticipantPrompt = false; JoinInitiated(ParticipationMode.Team); })" class="btn btn-primary">Team with open spots</button> 
+                    <button @onclick="(e => ShowTeamParticipantPrompt = false)" class="btn btn-primary">Cancel</button>
+                </div>
+                <div class="modal-footer">
+                    <small>* Team with open spots also applies if you're an individual team lead looking to form a team.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<button href="#" @onclick="(e => Clicked())" class="btn btn-primary">Join session</button>
+
+@code {
+    [Parameter]
+    public JamTeamFormingSession? Session { get; set; }
+
+    [Parameter]
+    public string? GenericPassCode { get; set; }
+
+    public enum ParticipationMode
+    {
+        Participant,
+        Team
+    }
+
+    bool ShowTeamParticipantPrompt = false;
+    string? HelpMsg;
+
+    void Clicked()
+    {
+        if (Session == null)
+        {
+            return;
+        }
+        ShowTeamParticipantPrompt = true;
+    }
+
+    void JoinInitiated(ParticipationMode mode)
+    {
+        if (mode == ParticipationMode.Participant)
+        {
+            if (Session == null || !SessionService.CanRegisterParticipant(Session))
+            {
+                HelpMsg = "Unable to join session - session might have maxed out on participants.";
+                return;
+            }
+            if (GenericPassCode != null)
+            {
+                NavigationManager.NavigateTo("/TeamSeekerCreate?id=" + Session.ID + "&passcode=" + GenericPassCode, true);
+            } else
+            {
+                NavigationManager.NavigateTo("/TeamSeekerCreate?id=" + Session.ID, true);
+            }
+        }
+    }
+}

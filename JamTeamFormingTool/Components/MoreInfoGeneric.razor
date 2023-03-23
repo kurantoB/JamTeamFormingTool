@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+
+<a href="#" @onclick="(e => ShowMoreInfo())">@DisplayText</a>
+<HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => HelpMsg = null" />
+
+@code {
+    [Parameter]
+    public string? CachedHelpMsg { get; set; }
+
+    [Parameter]
+    public string? DisplayText { get; set; }
+
+    private string? HelpMsg;
+
+    private void ShowMoreInfo()
+    {
+        HelpMsg = CachedHelpMsg;
+    }
+}

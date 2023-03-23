@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject NavigationManager NavigationManager;
+@inject JamTeamFormingTool.Services.JamTeamFormingSessionService TeamFormingSessionService;
+
+<HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => { HelpMsg = null; }" />
+@if (ShowPassCodePrompt)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Enter the session admin passcode:</p>
+                    <p><input type="text" @bind-value="@PassCode" /></p>
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="(e => { ShowPassCodePrompt = false; AccessAttempted(); })" class="btn btn-primary">Go</button>
+                    <button @onclick="(e => ShowPassCodePrompt = false)" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<a href="#" @onclick="(e => Clicked())">Admin</a>
+
+@code {
+    [Parameter]
+    public JamTeamFormingSession? Session { get; set; }
+
+    bool ShowPassCodePrompt = false;
+    string? HelpMsg;
+    string? PassCode;
+
+    Action AccessAttempted = () => { };
+
+    void Clicked()
+    {
+        if (Session == null)
+        {
+            return;
+        }
+        ShowPassCodePrompt = true;
+        AccessAttempted = () =>
+        {
+            if (PassCode == null)
+            {
+                HelpMsg = "Incorrect passcode.";
+                return;
+            }
+            if (TeamFormingSessionService.AdminPasscodeAttempt(Session, PassCode))
+            {
+                NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + Session.ID + "&passcode=" + PassCode, true);
+            } else
+            {
+                HelpMsg = "Incorrect passcode.";
+                return;
+            }
+        };
+    }
+}

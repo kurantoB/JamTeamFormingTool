@@ -1,0 +1,99 @@
+﻿@page
+@using JamTeamFormingTool.Models;
+@model JamTeamFormingTool.Pages.RoleTemplateDetailsModel
+
+@{
+    ViewData["Title"] = "RoleTemplateDetails";
+}
+
+<h1>Role template details</h1>
+
+<div>
+    <h4>@(Model.RoleTemplate.Name + (Model.RoleTemplate.IsStaged ? " (Pending)" : ""))</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoleTemplate.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.RoleTemplate.Description != null)
+            {
+                @Html.Raw(Model.RoleTemplate.Description.Replace("\n", "<br />"))
+            }
+        </dd>
+        <dt class="col-sm-2">
+            Status
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.RoleTemplate.IsStaged ? " Pending" : "Active")
+        </dd>
+    </dl>
+</div>
+<div>
+    <h5>Roles</h5>
+    <hr />
+    <ul>
+        @foreach (Role role in Model.RoleTemplate.Roles.OrderBy(r => r.Name))
+        {
+            <li>
+                @role.Name
+                @if (role.Description != null)
+                {
+                    @(await Html.RenderComponentAsync<Components.MoreInfo>(RenderMode.ServerPrerendered, new { cachedHelpMsg = role.Description }))
+                }
+            </li>
+        }
+    </ul>
+</div>
+<div>
+    <h5>
+        Coverages@(await Html.RenderComponentAsync<Components.MoreInfo>(RenderMode.ServerPrerendered, new
+        {
+            cachedHelpMsg = "If a team match can't be found for a team seeker, the tool will attempt to pair them with another team seeker. To do that, we walk through the list of \"coverages\" to find the most coverage for a given team paradigm."
+                + "\n\nEach coverage has a group of \"role categories\". The tool tries to \"satisfy\" as many role categories as it can when pairing team-seekers with each other. A role category is satisfied when any of the roles it contains is \"covered\" by any of the 2 team seekers in a potential pairing."
+        }))
+    </h5>
+    <hr />
+    <dl class="row">
+        @foreach (CoverageSet coverage in Model.RoleTemplate.CoverageSets)
+        {
+            <dt class="col-sm-2">
+                @coverage.Name
+            </dt>
+            <dd class="col-sm-10"></dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => coverage.RoleCategories)
+            </dt>
+            <dd class="col-sm-10">
+                <ul>
+                    @foreach (CoverageSetRoleCategory roleCategory in coverage.RoleCategories)
+                    {
+                        <li>
+                            --
+                            <ul>
+                                @foreach (Role roleCategoryRole in roleCategory.Roles)
+                                {
+                                    <li>@roleCategoryRole.Name</li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+    </dl>
+</div>
+<div>
+    <p>@(await Html.RenderComponentAsync<Components.RoleTemplate.DeleteButton>(RenderMode.ServerPrerendered, new { roleTemplateName = Model.RoleTemplate.Name }))</p>
+    @if (Model.RoleTemplate.IsStaged)
+    {
+        <p>
+            @(await Html.RenderComponentAsync<Components.RoleTemplate.ActivateButton>(RenderMode.ServerPrerendered, new { roleTemplateName = Model.RoleTemplate.Name }))
+        </p>
+    }
+</div>
+<div>
+    <a asp-page="./RoleTemplateIndex">Back to List</a>
+</div>
+
+<script src="_framework/blazor.server.js"></script>

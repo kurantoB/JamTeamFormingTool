@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject JamTeamFormingTool.Services.JamTeamFormingSessionService TeamFormingSessionService;
+@inject NavigationManager NavigationManager;
+
+<HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => { HelpMsg = null; ReloadRequested(); }" />
+<ConfirmModal confirmMsg="@ConfirmMsg" confirmCallback="() => { ConfirmMsg = null; ConfirmCallback(); }" confirmDeniedCallback="() => ConfirmMsg = null" />
+
+<button @onclick="(e => Clicked())" class="btn btn-primary">Shut down team forming session</button>
+
+@code {
+    [Parameter]
+    public JamTeamFormingSession? Session { get; set; }
+
+    private string? HelpMsg;
+    private string? ConfirmMsg;
+
+    void Clicked()
+    {
+        ConfirmMsg = "Are you sure? (This cannot be undone.)";
+        StateHasChanged();
+    }
+
+    void ConfirmCallback()
+    {
+        if (Session == null)
+        {
+            ConfirmMsg = "Session is invalid.";
+            StateHasChanged();
+            return;
+        }
+        if (TeamFormingSessionService.TryDelete(Session))
+        {
+            HelpMsg = "Session has been deleted!";
+        }
+        else
+        {
+            HelpMsg = "Session is invalid.";
+        }
+        StateHasChanged();
+    }
+
+    void ReloadRequested()
+    {
+        NavigationManager.NavigateTo("/TeamFormingSessionIndex", true);
+    }
+}

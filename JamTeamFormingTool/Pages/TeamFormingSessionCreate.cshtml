@@ -1,0 +1,74 @@
+﻿@page
+@model JamTeamFormingTool.Pages.TeamFormingSessionCreateModel
+
+@{
+    ViewData["Title"] = "TeamFormingSessionCreate";
+}
+
+@(
+await Html.RenderComponentAsync<Components.TeamFormingSession.PostMsgModal>(RenderMode.ServerPrerendered, new {
+    ModalPostStatus = Model.PostStatus,
+    ModalAdminPassCode = Model.JamTeamFormingSession?.AdminPassCode,
+    ModalGenericPassCode = Model.JamTeamFormingSession?.GenericPassCode
+})
+)
+<h1>Team forming session creation</h1>
+
+<h4>Team forming session</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="JamTeamFormingSession.RoleTemplate" class="control-label"></label>
+                <select asp-for="RoleTemplateName">
+                    @foreach (string roleTemplateName in Model.RoleTemplateNames)
+                    {
+                        <option value="@roleTemplateName">@roleTemplateName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JamTeamFormingSession.Name" class="control-label"></label>
+                <input asp-for="JamTeamFormingSession.Name" class="form-control" />
+                <span asp-validation-for="JamTeamFormingSession.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JamTeamFormingSession.Info" class="control-label"></label>
+                <small>(Optional)</small>
+                <input asp-for="JamTeamFormingSession.Info" class="form-control" />
+                <span asp-validation-for="JamTeamFormingSession.Info" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JamTeamFormingSession.AdminEmail" class="control-label">Email@(await Html.RenderComponentAsync<Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                {
+                    cachedHelpMsg = "Visible only to site admin. This is to serve as your contact info in case the site admin needs to reach out regarding any issues."
+                }))</label>
+                <input asp-for="JamTeamFormingSession.AdminEmail" class="form-control" />
+                <span asp-validation-for="JamTeamFormingSession.AdminEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Access@(await Html.RenderComponentAsync<Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                {
+                    cachedHelpMsg = "Setting this session to invite-only will add passcode security on top of it. The invite passcode will be generated and provided to the jam host upon submission."
+                }))</label><br />
+                <input type="radio" value="Public" asp-for="AccessString" checked /> Public<br />
+                <input type="radio" value="Invite-only" asp-for="AccessString" /> Invite-only<br />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+<script src="_framework/blazor.server.js"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

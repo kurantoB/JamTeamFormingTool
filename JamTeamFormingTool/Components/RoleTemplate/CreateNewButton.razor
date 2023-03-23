@@ -1,0 +1,27 @@
+﻿@using JamTeamFormingTool.Services;
+@using Microsoft.AspNetCore.Components.Web;
+@inject RoleTemplateService RoleTemplateService;
+@inject NavigationManager NavigationManager;
+
+<button @onclick="(e => CreateNewClicked())" class="btn btn-primary">Create New</button>
+<HelpMsgModal helpMsg="@helpMsg" helpMsgCallback="() => helpMsg = null" />
+
+@code {
+    private string? helpMsg;
+
+    private void CreateNewClicked()
+    {
+        if (!RoleTemplateService.CanRegisterStagedOnTotalLimit())
+        {
+            helpMsg = "Error: Maximum number of role templates reached.";
+        }
+        else if (!RoleTemplateService.CanRegisterStagedOnLimit())
+        {
+            helpMsg = "Error: Maximum number of role templates pending submission reached.";
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/RoleTemplateCreate", true);
+        }
+    }
+}

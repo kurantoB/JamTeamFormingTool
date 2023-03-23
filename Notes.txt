@@ -1,0 +1,86 @@
+Kuranto's Jam Team Forming Tool
+
+Anyway, the real reason I want to make a matchmaking app is so that I don't have to decide among a pool of potentials when there can be a program telling me who to pick
+There'll still be a pool, tho. Albeit much smaller
+I'm thinking of something like, if you're looking to join a team, you make a ranked list of preferred roles you want. And then be matched with teams that have the right openings
+Ideally, your list of preferred roles coincides exactly with a team, so you can take on 3 roles at once
+Idk if everyone there is as available as the moment they posted their message
+And there seems to be more seekers than takers
+Programmer mind speaking, but every process has room for optimization
+There's uh.. a lot of words to read in that channel but hey let's reduce everyone into an abstract set of things to simplify it
+Like, we all know which people are looking for teams but most of us don't know which teams are looking for persons.
+At least this way, we get both sides
+The key word is power balance
+Yup yup. Backend dB is pretty much mandatory
+The only input that applies here is team name and discord handle probably
+Which.. kind of forces teams to come up with names
+On the flip side, maybe there are no open roles, in which case everyone should know before it's too late
+And quickly decide to form teams within the group of looking-for-teams
+That'll require effort, crafting a profile and everything. Really does no favors to the userbase numbers :/
+I think the profile should contain just the info necessary
+Like for team seekers; preferred roles (ranked), discord handle, portfolio (optional), time zone (optional)
+For teams: needed roles, game pitch (optional), team name (optional, a random name will be chosen for you if left blank), discord handle for contact, time zone (optional)
+No braincell needed
+
+Come on and slam, and welcome to the jam
+
+Artist (2D, sprites) Art that is meant to be used as game assets, usually pixel-based.
+Artist (2D, generic) Non-sprite art assets. For example: backgrounds, splash art, character illustration.
+Artist (3D modeling)
+Composer
+Game designer
+Programmer (Ren'Py) A visual novel game engine.
+Programmer (Danmakufu) A bullet hell shoot 'em up game engine.
+Programmer (RPGMaker)
+Programmer (Godot) An all-purpose 2D and 3D game engine.
+Programmer (Unreal) An all-purpose 3D game engine.
+Programmer (GameMaker) An all-purpose 2D game engine.
+Programmer (Unity) An all-purpose 2D and 3D game engine.
+Programmer (LuaSTG) A bullet hell shoot 'em up game engine.
+Programmer (other)
+Translator
+Voicework provider
+Writer Does not strictly refer to written dialogue.
+
+1. The jam host creates a team forming session, kicking off the registration phase. Actual matching does not take place yet.
+2. During the registration phase, pre-made teams with open spots and individual team-seekers register with the created session.
+3. After a predefined amount of time, the jam host advances the session to the team forming phase. Here, teams and team seekers are provided with ranked matches according to compatibility. Participants are taken off the registry as they settle on a match. Registration for the session remains open to new participants.
+4. The jam host shuts down the team forming session when the time is apt. They may consider leaving the session open throughout the duration of the jam if there are still unmatched teams or team seekers, in case there are late-comers.
+
+
+Coverages
+
+>>>>3D
+
+Artist (3D modeling)
+Programmer (Godot), Programmer (Unreal), Programmer (Unity)
+Composer
+Game designer
+
+>>>>Sprite-heavy
+
+Artist (2D, sprites)
+Programmer (Danmakufu), Programmer (RPGMaker), Programmer (Godot), Programmer (GameMaker), Programmer (Unity), Programmer (LuaSTG)
+Composer
+Game designer
+
+>>>>Mini-games
+
+Artist (2D, sprites), Artist (2D, generic)
+Programmer (Godot), Programmer (GameMaker), Programmer (Unity)
+Composer
+Game designer
+
+>>>>Bullet hell
+
+Artist (2D, sprites)
+Programmer (Danmakufu), Programmer (LuaSTG)
+Composer
+
+>>>>Visual novel
+
+Artist (2D, generic)
+Programmer (Ren'Py)
+Composer
+Writer
+Voicework provider

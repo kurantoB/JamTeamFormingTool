@@ -1,0 +1,61 @@
+﻿@inject NavigationManager NavigationManager;
+@using Microsoft.AspNetCore.Components.Web;
+
+@if (ModalPostStatus != null)
+{
+    ReturnToIndex = () =>
+    {
+        NavigationManager.NavigateTo("/TeamFormingSessionIndex", true);
+    };
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    @if (ModalPostStatus == "success")
+                    {
+                        <p>
+                            Creation success!<br />
+                            The admin passcode for this session is @ModalAdminPassCode. Keep this in your records.
+                        </p>
+                        @if (ModalGenericPassCode != null)
+                        {
+                            <p>
+                                The generic passcode for this session is @ModalGenericPassCode. Distribute this to participants of this session.
+                            </p>
+                        }
+                    } else if (ModalPostStatus == "maxedout")
+                    {
+                        <p>Unable to create: the session limit has been reached.</p>
+                    } else
+                    {
+                        <p>
+                            The selected role template does not exist.
+                        </p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    @if (ModalPostStatus == "success" || ModalPostStatus == "maxedout")
+                    {
+                        <button type="button" @onclick="(e => { ModalPostStatus = null; ReturnToIndex(); })" class="btn btn-primary">Ok</button>
+                    } else
+                    {
+                        <button type="button" @onclick="(e => ModalPostStatus = null)" class="btn btn-primary">Ok</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? ModalPostStatus { get; set; }
+
+    [Parameter]
+    public string? ModalAdminPassCode { get; set; }
+
+    [Parameter]
+    public string? ModalGenericPassCode { get; set; }
+
+    public Action? ReturnToIndex;
+}

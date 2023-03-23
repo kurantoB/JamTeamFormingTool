@@ -1,0 +1,68 @@
+﻿@using JamTeamFormingTool.Services;
+@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject RoleTemplateService RoleTemplateService;
+@inject NavigationManager NavigationManager;
+
+
+<HelpMsgModal helpMsg="@helpMsg" helpMsgCallback="() => { helpMsg = null; helpMsgCallback(); }" />
+<ConfirmModal confirmMsg="@confirmMsg" confirmCallback="() => { confirmMsg = null; confirmCallback(); }" confirmDeniedCallback="() => { confirmMsg = null; confirmDeniedCallback(); }" />
+
+<button @onclick="(e => ActivateClicked())" class="btn btn-primary">Activate role template</button>
+@if (showPassCodePrompt)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Enter the role template passcode:</p>
+                    <p><input type="text" @bind-value="@passCode" /></p>
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="(e => { showPassCodePrompt = false; activateAttempt(); })" class="btn btn-primary">Activate</button>
+                    <button @onclick="(e => showPassCodePrompt = false)" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string roleTemplateName { get; set; }
+    private RoleTemplate? roleTemplate;
+
+    private string? helpMsg;
+    private Action helpMsgCallback = () => { };
+
+    private string? confirmMsg;
+    private Action confirmCallback = () => { };
+    private Action confirmDeniedCallback = () => { };
+
+    private Action activateAttempt = () => { };
+
+    private void ActivateClicked()
+    {
+        showPassCodePrompt = true;
+        activateAttempt = () =>
+        {
+            roleTemplate = RoleTemplateService.Retrieve(roleTemplateName);
+            if (RoleTemplateService.PassCodeAttempt(roleTemplate, passCode))
+            {
+                RoleTemplateService.Submit(roleTemplate);
+                helpMsg = "Activation success!";
+                helpMsgCallback = () =>
+                {
+                    NavigationManager.NavigateTo("/RoleTemplateDetails?name=" + roleTemplate.Name, true);
+                };
+            }
+            else
+            {
+                helpMsg = "Incorrect passcode.";
+            }
+        };
+    }
+
+    private bool showPassCodePrompt;
+    private string? passCode;
+}

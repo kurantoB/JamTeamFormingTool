@@ -1,0 +1,55 @@
+﻿@page
+@model JamTeamFormingTool.Pages.TeamFormingSessionIndexModel
+
+@{
+    ViewData["Title"] = "TeamFormingSessionIndex";
+}
+
+<h1>Team forming sessions</h1>
+
+<p>
+    <a asp-page="/TeamFormingSessionCreate">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JamTeamFormingSession[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JamTeamFormingSession[0].CreateTime)
+            </th>
+            <th>Role template</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.JamTeamFormingSession.Count; i++) {
+            <tr>
+                <td>
+                    @(await Html.RenderComponentAsync<Components.TeamFormingSession.ParticipantJoin>(RenderMode.ServerPrerendered, new {
+                        Session = Model.JamTeamFormingSession[i]
+                    }))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.JamTeamFormingSession[i].CreateTime)
+                </td>
+                <td>
+                    @Model.RoleTemplateNames[i]
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.JamTeamFormingSession[i].Info)
+                </td>
+                <td>
+                    @(await Html.RenderComponentAsync<Components.TeamFormingSession.AdminJoin>(RenderMode.ServerPrerendered, new
+                    {
+                        Session = Model.JamTeamFormingSession[i]
+                    }))
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="_framework/blazor.server.js"></script>

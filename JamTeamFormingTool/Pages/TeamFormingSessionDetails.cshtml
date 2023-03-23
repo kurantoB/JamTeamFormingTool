@@ -1,0 +1,89 @@
+﻿@page
+@model JamTeamFormingTool.Pages.TeamFormingSessionDetailsModel
+
+@{
+    ViewData["Title"] = "TeamFormingSessionDetails";
+}
+
+@if (Model.IsAdmin)
+{
+    <h1>Team forming session (admin view)</h1>
+} else
+{
+    <h1>Team forming session</h1>
+}
+
+<div>
+    <h4>@Model.JamTeamFormingSession.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.JamTeamFormingSession.CreateTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.JamTeamFormingSession.CreateTime)
+        </dd>
+        <dt class="col-sm-2">
+            Role template@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new {
+                cachedHelpMsg = "Role templates are criteria made for team forming sessions. Every team forming session is derived from a role template."
+            }))
+        </dt>
+        <dd class="col-sm-10">
+            <a asp-page="./RoleTemplateDetails" asp-route-name="@Model.RoleTemplateName">@Model.RoleTemplateName</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.JamTeamFormingSession.Info)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.JamTeamFormingSession.Info)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.JamTeamFormingSession.Phase)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.JamTeamFormingSession.Phase == Models.SessionPhase.Registration)
+            {
+                <span>Registration</span>
+                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                {
+                    cachedHelpMsg = "Actual matching has not taken place yet. Pre-made teams with open spots and individual team-seekers are to register and wait for the session to advance to the team forming phase."
+                }))
+            } else
+            {
+                <span>Team forming</span>
+                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                {
+                    cachedHelpMsg = "Teams and team seekers can now view their matches that are ranked according to compatibility. Participants are taken off the registry as they settle on a match. Registration remains open."
+                }))
+            }
+        </dd>
+    </dl>
+    @if (!Model.IsAdmin)
+    {
+        <div>
+            @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.JoinSessionButton>(RenderMode.ServerPrerendered, new
+            {
+                Session = Model.JamTeamFormingSession,
+                GenericPassCode = Model.GenericPassCode
+            }))
+        </div>
+    }
+</div>
+@if (Model.IsAdmin)
+{
+    <div>
+        @if (Model.JamTeamFormingSession.Phase == Models.SessionPhase.Registration)
+        {
+            @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.AdvanceButton>(RenderMode.ServerPrerendered, new { Session = Model.JamTeamFormingSession }))
+            <br />
+            <br />
+        }
+        @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.DeleteButton>(RenderMode.ServerPrerendered, new { Session = Model.JamTeamFormingSession }))
+     </div>
+}
+
+<div>
+    <a asp-page="./TeamFormingSessionIndex">Back to List</a>
+</div>
+
+<script src="_framework/blazor.server.js"></script>

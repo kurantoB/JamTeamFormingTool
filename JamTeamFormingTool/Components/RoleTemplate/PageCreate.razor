@@ -1,0 +1,379 @@
+﻿@using JamTeamFormingTool.Models;
+@using JamTeamFormingTool.Services;
+@using Microsoft.AspNetCore.Components.Web;
+@using Microsoft.AspNetCore.Components.Forms;
+@using Microsoft.JSInterop;
+@using System.Text.Json;
+@inject IJSRuntime JS;
+@inject NavigationManager NavigationManager;
+@inject RoleTemplateService RoleTemplateService;
+@inject IWebHostEnvironment WebHostEnvironment;
+
+<h4>Role template</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <HelpMsgModal helpMsg="@helpMsg" helpMsgCallback="() => { helpMsg = null; helpMsgCallback(); }" />
+        <ConfirmModal confirmMsg="@confirmMsg" confirmCallback="() => { confirmMsg = null; confirmCallback(); }" confirmDeniedCallback="() => { confirmMsg = null; confirmDeniedCallback(); }" />
+        <p>Create a role template here.</p>
+            @if (!rolesDone)
+            {
+                <EditForm Model="@newTemplate" OnValidSubmit="@HandleValidSubmit">
+                    <CustomValidation @ref="customValidation" />
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Name (keep this in your records):</label>
+                                    <small>(Max 100 chars)</small>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="newTemplate.Name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Email:<sup><a href="#" class="link-primary" @onclick="(e => ShowEmailHelp())">?</a></sup></label>
+                                    <small>(Max 100 chars)</small>
+                                </td>
+                                <td>
+                                    <InputText @bind-Value="newTemplate.Email" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="control-label">Description</label>
+                                    <small>(Optional, max 500 chars)</small>
+                                </td>
+                                <td>
+                                    <InputTextArea @bind-Value="newTemplate.Description" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Roles</h4>
+                    <hr />
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name<br>
+                                    <small>Max 60 chars</small><br>
+                                </th>
+                                <th>
+                                    Description<br>
+                                    <small>Optional</small><br>
+                                    <small>Max 120 chars</small><br>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < newTemplate.Roles.Count; i++)
+                            {
+                                int iCopy = i;
+                                <tr>
+                                    <td>
+                                        <InputText @bind-Value="newTemplate.Roles[iCopy].Name" />
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="newTemplate.Roles[iCopy].Description" />
+                                    </td>
+                                    <td>
+                                        <button type="button" @onclick="(e => newTemplate.Roles.RemoveAt(iCopy))" class="btn btn-secondary">Remove</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" @onclick="(e => TryAddRole())" class="btn btn-primary">Add role</button>
+                    <hr />
+                    <p><button type="submit" class="btn btn-primary">Next</button></p>
+                </EditForm>
+            }
+            else
+            {
+                <h5>Add coverages to new role template (optional) <sup><a href="#" class="link-primary" @onclick="(e => ShowCoverageHelp())">?</a></sup></h5>
+                <EditForm Model="@newTemplate" OnValidSubmit="@HandleValidSubmit2">
+                    @for (int c_i = 0; c_i < newTemplate.CoverageSets.Count; c_i++)
+                    {
+                        int c_iCopy = c_i;
+                        <p>
+                            <h5>New coverage</h5>
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Name:<br>
+                                        <small>Max 60 chars</small>
+                                    </td>
+                                    <td>
+                                        <InputText @bind-Value="newTemplate.CoverageSets[c_iCopy].Name" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin-left: 80px">
+                                <h5>Role Categories</h5>
+                                @for (int rc_i = 0; rc_i < newTemplate.CoverageSets[c_iCopy].RoleCategories.Count; rc_i++)
+                                {
+                                    int rc_iCopy = rc_i;
+                                    string selectId = "roleCategory_" + c_iCopy + "_" + rc_iCopy;
+                                    <p>Roles:</p>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <select id="@selectId" @onchange="(e => RoleCategoryChanged(selectId, newTemplate.CoverageSets[c_iCopy].RoleCategories[rc_iCopy].Roles))" multiple>
+                                                @for (int role_i = 0; role_i < newTemplate.Roles.Count; role_i++)
+                                                {
+                                                    int role_iCopy = role_i;
+                                                                <option value="@newTemplate.Roles[role_iCopy].Name" selected="@newTemplate.CoverageSets[c_iCopy].RoleCategories[rc_iCopy].Roles.Contains(newTemplate.Roles[role_iCopy])">@newTemplate.Roles[role_iCopy].Name</option>
+                                                }
+                                                    </select>
+                                                    <p><a @onclick="(e => ShowSelectHelp())" href="#">[Multi-select help]</a></p>
+                                                </td>
+                                                <td>
+                                                    <button type="button" @onclick="(e => newTemplate.CoverageSets[c_iCopy].RoleCategories.RemoveAt(rc_iCopy))" class="btn btn-secondary">Remove</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                }
+                                <p>
+                                    <button type="button" @onclick="(e => TryAddRoleCategory(newTemplate.CoverageSets[c_iCopy]))" class="btn btn-primary">Add role category</button>
+                                </p>
+                            </p>
+                            <button type="button" @onclick="(e => newTemplate.CoverageSets.RemoveAt(c_iCopy))" class="btn btn-secondary">Remove Coverage</button>
+                        </p>
+                        <hr />
+                    }
+                    <p>
+                        <button type="button" @onclick="(e => TryAddCoverage())" class="btn btn-primary">Add coverage</button>
+                    </p>
+                    <hr />
+                    <p><button type="submit" class="btn btn-primary">Save</button></p>
+                </EditForm>
+                <hr />
+                <p><button @onclick="(e => GoBack())" class="btn btn-primary">Back</button></p>
+            }
+    </div>
+</div>
+
+@code {
+    private RoleTemplate newTemplate = new() {
+        Roles = new List<Role>() { },
+        CoverageSets = new List<CoverageSet>(),
+    };
+
+    private CustomValidation? customValidation;
+
+    private string? helpMsg;
+    public Action helpMsgCallback = () => { };
+    private string? confirmMsg;
+    private Action confirmCallback = () => { };
+    private Action confirmDeniedCallback = () => { };
+
+    private void ShowEmailHelp()
+    {
+        helpMsg = "For security reasons, activating this role template will require you to contact the site admin via email."
+            + "\nYour email entered here will be matched against the sender when you request activation."
+            + "\nIt will only be visible to the site admin.";
+    }
+
+    private bool rolesDone = false;
+
+    private void TryAddRole()
+    {
+        if (newTemplate.Roles.Count == DBConstants.MaxRoleTemplateRoles)
+        {
+            helpMsg = "You have reached the maximum amount of roles.";
+        } else
+        {
+            newTemplate.Roles.Add(new Role());
+        }
+    }
+
+    private void HandleValidSubmit()
+    {
+        customValidation?.ClearErrors();
+        var errors = new Dictionary<string, List<string>>();
+        if (newTemplate.Roles.Count == 0)
+        {
+            errors.Add("", new() { "Role template must contain at least 1 role." });
+        }
+        foreach (Role role in newTemplate.Roles)
+        {
+            if (role.Name == null)
+            {
+                errors.Add("", new() { "Role name is required." });
+                break;
+            } else if (role.Name.Length > 60)
+            {
+                errors.Add("", new() { "Role name must be 60 characters or fewer." });
+                break;
+            }
+            if (role.Description?.Length > 120)
+            {
+                errors.Add("", new() { "Role description must be 120 characters or fewer." });
+                break;
+            }
+            if (errors.Count > 0)
+            {
+                break;
+            }
+            foreach (Role otherRole in newTemplate.Roles)
+            {
+                if (otherRole != role && otherRole.Name == role.Name)
+                {
+                    errors.Add("", new() { "Role names can't have a duplicate." });
+                    break;
+                }
+            }
+        }
+        if (!RoleTemplateService.CanRegisterStagedOnName(newTemplate.Name) && errors.Count == 0)
+        {
+            errors.Add("", new() { $"Role template name [{newTemplate.Name}] is taken." });
+        }
+
+        if (errors.Any())
+        {
+            customValidation?.DisplayErrors(errors);
+        } else
+        {
+            rolesDone = true;
+        }
+    }
+
+    private void ShowCoverageHelp()
+    {
+        helpMsg = "If a team match can't be found for a team seeker, the tool will attempt to pair them with another team seeker. To do that, we walk through the list of \"coverages\" to find the most coverage for a given team paradigm."
+            + "\n\nEach coverage has a group of \"role categories\". The tool tries to \"satisfy\" as many role categories as it can when pairing team-seekers with each other. A role category is satisfied when any of the roles it contains is \"covered\" by any of the 2 team seekers in a potential pairing.";
+    }
+
+    private void GoBack()
+    {
+        confirmCallback = () =>
+        {
+            newTemplate.CoverageSets.Clear();
+            rolesDone = false;
+            StateHasChanged();
+        };
+        confirmMsg = "Going back would reset your coverage changes. Are you sure?";
+    }
+
+    private void TryAddCoverage()
+    {
+        if (newTemplate.CoverageSets.Count == DBConstants.MaxCoverageSets)
+        {
+            helpMsg = "You have reached the maximum amount of coverages.";
+        } else
+        {
+            newTemplate.CoverageSets.Add(new CoverageSet() { RoleTemplate = newTemplate, RoleCategories = new List<CoverageSetRoleCategory>() } );
+        }
+    }
+
+    private void TryAddRoleCategory(CoverageSet coverageSet)
+    {
+        if (coverageSet.RoleCategories.Count == DBConstants.MaxCoverageSetRoleCategories)
+        {
+            helpMsg = "You have reached the maximum amount of role categories.";
+        }
+        else
+        {
+            coverageSet.RoleCategories.Add(new CoverageSetRoleCategory() { CoverageSet = coverageSet, Roles = new List<Role>() });
+        }
+    }
+
+    private void ShowSelectHelp()
+    {
+        helpMsg = "Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.";
+    }
+
+    private async void RoleCategoryChanged(string selectId, IList<Role> roleCategory)
+    {
+        roleCategory.Clear();
+        IList<string> selectedRoleNames = await JS.InvokeAsync<List<string>>("getRoleCategoryRoles", selectId);
+        foreach (string selectedRoleName in selectedRoleNames)
+        {
+            foreach (Role newRole in newTemplate.Roles)
+            {
+                if (newRole.Name == selectedRoleName)
+                {
+                    roleCategory.Add(newRole);
+                    break;
+                }
+            }
+        }
+        Console.WriteLine("Inspect the new template here: " + newTemplate.ToString());
+    }
+
+    private void HandleValidSubmit2()
+    {
+        confirmMsg = "Do you agree to the following?"
+            + "\n- I understand that site admin permission is required for the creation of this role template."
+            + "\n- I understand the site admin reserves the right to withhold the activation of (and to delete) this role template."
+            + "\n- I understand this role template will be freely available for public use as long as it is contained in the records.";
+        confirmCallback = () =>
+        {
+            foreach (CoverageSet coverage in newTemplate.CoverageSets)
+            {
+                if (coverage.Name == null)
+                {
+                    helpMsg = "Coverage name is required.";
+                    break;
+                }
+                if (coverage.Name?.Length > 60)
+                {
+                    helpMsg = "Coverage name must be 60 characters or fewer.";
+                    break;
+                }
+                if (coverage.RoleCategories.Count == 0)
+                {
+                    helpMsg = "Coverages must contain at least 1 role category.";
+                    break;
+                }
+                foreach (CoverageSetRoleCategory roleCategory in coverage.RoleCategories)
+                {
+                    if (roleCategory.Roles.Count == 0)
+                    {
+                        helpMsg = "Role categories must contain at least 1 role.";
+                        break;
+                    }
+                }
+                if (helpMsg != null)
+                {
+                    break;
+                }
+            }
+            if (helpMsg != null)
+            {
+                StateHasChanged();
+                return;
+            }
+            if (!RoleTemplateService.CanRegisterStagedOnName(newTemplate.Name))
+            {
+                helpMsg = $"Unable to register role template: Name [{newTemplate.Name}] is taken.";
+                StateHasChanged();
+                return;
+            }
+
+            RoleTemplateService.RegisterStaged(newTemplate);
+            string siteAdminContact = JsonSerializer.Deserialize<IDictionary<string, string>>(
+                File.OpenText(
+                    Path.Combine(WebHostEnvironment.WebRootPath, "data", "siteadmin.json")).ReadToEnd()
+            )["siteAdmin"];
+            helpMsg = $"Successfully registered role template [{newTemplate.Name}]!"
+                + "\n\nKeep this name in your records until this role template is activated."
+                + $"\nTo request activation, notify the site admin at {siteAdminContact}."
+                + "\nYou can view this role template by going to [Role templates] > [View pending] from the site homepage.";
+            helpMsgCallback = () =>
+            {
+                NavigationManager.NavigateTo("/RoleTemplateDetails?name=" + newTemplate.Name, true);
+            };
+            StateHasChanged();
+        };
+    }
+}

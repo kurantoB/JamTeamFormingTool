@@ -1,0 +1,50 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Jam Team Forming Tool</h1>
+    <h3>a free online webapp serving your team match-making needs</h3>
+    <small>* "Jam" primarily refers to game jams, though it should be feasible to extend this to other similar endeavors.</small>
+    <br />
+    <br />
+    <p>Whether you are a team leader looking to fill some roles, or an individual team seeker itching to contribute, Jam Team Forming Tool can help. The tool takes the abilities and needs of both teams and individual team seekers into account in order to find the best match for all parties.</p>
+    <hr />
+    <br />
+    <br />
+</div>
+<div>
+    <div>
+        <h2>@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfoGeneric>(RenderMode.ServerPrerendered, new { CachedHelpMsg = Model.LifecycleHelp, DisplayText = "Read" })) about the team forming session lifecycle.</h2>
+        <br />
+        <br />
+    </div>
+    <div>
+        <h2>For jam hosts</h2>
+        <ul>
+            <li>
+                <a asp-page="/TeamFormingSessionCreate">Create</a> a team forming session.<br />
+                <small>Team forming sessions are derived from <a asp-page="/RoleTemplateIndex">role templates</a>. If there isn't already one that fits your needs, <a asp-page="/RoleTemplateCreate">create a new one</a>.</small>
+            </li>
+            <li>
+                Manage a <a asp-page="/TeamFormingSessionIndex">team forming session</a>.
+            </li>
+        </ul>
+        <br />
+        <br />
+    </div>
+    <div>
+        <h2>For jam participants</h2>
+        <ul>
+            <li>
+                Join a <a asp-page="/TeamFormingSessionIndex">team forming session</a> or manage your participation in one.
+            </li>
+        </ul>
+        <br />
+        <br />
+    </div>
+</div>
+
+<script src="_framework/blazor.server.js"></script>

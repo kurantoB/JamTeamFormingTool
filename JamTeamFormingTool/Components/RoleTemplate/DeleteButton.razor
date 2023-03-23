@@ -1,0 +1,98 @@
+﻿@using JamTeamFormingTool.Services;
+@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject RoleTemplateService RoleTemplateService;
+@inject NavigationManager NavigationManager;
+
+
+<button @onclick="(e => DeleteClicked())" class="btn btn-secondary">Delete role template</button>
+<HelpMsgModal helpMsg="@helpMsg" helpMsgCallback="() => { helpMsg = null; helpMsgCallback(); }" />
+<ConfirmModal confirmMsg="@confirmMsg" confirmCallback="() => { confirmMsg = null; confirmCallback(); }" confirmDeniedCallback="() => { confirmMsg = null; confirmDeniedCallback(); }" />
+@if (showPassCodePrompt)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Enter the role template passcode:</p>
+                    <p><input type="text" @bind-value="@passCode" /></p>
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="(e => { showPassCodePrompt = false; deleteAttempt(); })" class="btn btn-primary">Delete</button>
+                    <button @onclick="(e => showPassCodePrompt = false)" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string roleTemplateName { get; set; }
+    public RoleTemplate? roleTemplate;
+
+    private string? helpMsg;
+    private Action helpMsgCallback = () => { };
+
+    private string? confirmMsg;
+    private Action confirmCallback = () => { };
+    private Action confirmDeniedCallback = () => { };
+
+    private bool showPassCodePrompt;
+    private string? passCode;
+
+    private Action deleteAttempt = () => { };
+
+    private void DeleteClicked()
+    {
+        roleTemplate = RoleTemplateService.Retrieve(roleTemplateName);
+        if (roleTemplate == null)
+        {
+            return;
+        }
+        if (!RoleTemplateService.CanDelete(roleTemplate))
+        {
+            helpMsg = "Unable to delete role template - there is at least 1 active team forming session that derives from this role template.";
+            return;
+        }
+
+        confirmMsg = "Are you sure?";
+        confirmCallback = () =>
+        {
+            if (roleTemplate.IsStaged)
+            {
+                Delete();
+            } else
+            {
+                showPassCodePrompt = true;
+                deleteAttempt = () =>
+                {
+                    if (RoleTemplateService.PassCodeAttempt(roleTemplate, passCode))
+                    {
+                        Delete();
+                    }
+                    else
+                    {
+                        helpMsg = "Incorrect passcode.";
+                    }
+                };
+                StateHasChanged();
+            }
+        };
+    }
+
+    private void Delete()
+    {
+        if (roleTemplate == null)
+        {
+            return;
+        }
+        RoleTemplateService.Delete(roleTemplate);
+        helpMsg = "Successfully deleted role template.";
+        helpMsgCallback = () =>
+        {
+            NavigationManager.NavigateTo("/RoleTemplateIndex", true);
+        };
+        StateHasChanged();
+    }
+}
