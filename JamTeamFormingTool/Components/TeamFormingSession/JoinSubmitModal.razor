@@ -9,6 +9,14 @@
                 <div class="modal-body">
                     <h6>
                         @HelpMsg
+                        @if (SubmitStatus == "success")
+                        {
+                            @if (ShowTeamName)
+                            {
+                                <br />@("Your team name is [" + TeamName + "].")
+                            }
+                            <br />@("You can access and manage your participation from the session page.")
+                        }
                     </h6>
                 </div>
                 <div class="modal-footer">
@@ -37,6 +45,12 @@
 
     [Parameter]
     public string? SessionPassCode { get; set; }
+
+    [Parameter]
+    public bool ShowTeamName { get; set; }
+
+    [Parameter]
+    public string? TeamName { get; set; }
 
     public void Callback()
     {

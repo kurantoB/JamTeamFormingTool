@@ -2,7 +2,7 @@
 @model JamTeamFormingTool.Pages.TeamFormingSessionCreateModel
 
 @{
-    ViewData["Title"] = "TeamFormingSessionCreate";
+    ViewData["Title"] = "Create team forming session";
 }
 
 @(
@@ -35,7 +35,10 @@ await Html.RenderComponentAsync<Components.TeamFormingSession.PostMsgModal>(Rend
                 <span asp-validation-for="JamTeamFormingSession.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="JamTeamFormingSession.Info" class="control-label"></label>
+                <label asp-for="JamTeamFormingSession.Info" class="control-label"></label>@(await Html.RenderComponentAsync<Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                {
+                    cachedHelpMsg = "Relevant link or additional info."
+                }))
                 <small>(Optional)</small>
                 <input asp-for="JamTeamFormingSession.Info" class="form-control" />
                 <span asp-validation-for="JamTeamFormingSession.Info" class="text-danger"></span>

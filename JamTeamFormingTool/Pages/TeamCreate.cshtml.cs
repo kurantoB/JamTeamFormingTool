@@ -9,13 +9,15 @@ using JamTeamFormingTool.Data;
 using JamTeamFormingTool.Models;
 using JamTeamFormingTool.Services;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
 
 namespace JamTeamFormingTool.Pages
 {
-    public class TeamSeekerCreateModel : PageModel
+    public class TeamCreateModel : PageModel
     {
         private readonly JamTeamFormingTool.Data.MyDBContext _context;
         private JamTeamFormingSessionService _sessionService;
+        private IWebHostEnvironment _webHostEnvironment;
 
         public string? PageStatus;
         public Dictionary<string, Region?> RegionMap = new() {
@@ -31,10 +33,11 @@ namespace JamTeamFormingTool.Pages
             "Asia / Pacific"
         };
 
-        public TeamSeekerCreateModel(JamTeamFormingTool.Data.MyDBContext context, JamTeamFormingSessionService sessionService)
+        public TeamCreateModel(JamTeamFormingTool.Data.MyDBContext context, JamTeamFormingSessionService sessionService, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _sessionService = sessionService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult OnGet(int id, string? passCode)
@@ -69,7 +72,7 @@ namespace JamTeamFormingTool.Pages
         }
 
         [BindProperty]
-        public Participant Participant { get; set; } = default!;
+        public Team Team { get; set; } = default!;
 
         [BindProperty]
         public string? SessionPassCode { get; set; }
@@ -86,12 +89,14 @@ namespace JamTeamFormingTool.Pages
         public string? SubmitStatus { get; set; }
         [BindProperty]
         public string? TempRegion { get; set; }
+        [BindProperty]
+        public bool AssignedName { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             OnGet(Session.ID, SessionPassCode);
-            if (_context.Participants == null || Participant == null)
+            if (_context.Participants == null || Team == null)
             {
                 return Page();
             }
@@ -103,7 +108,28 @@ namespace JamTeamFormingTool.Pages
                 SubmitStatus = "failure";
                 return Page();
             }
-            Participant.Session = trackedSession;
+            Team.Session = trackedSession;
+
+            if (Team.Name == null)
+            {
+                AssignedName = true;
+                IList<string>? names1 = JsonSerializer.Deserialize<IList<string>>(
+                    System.IO.File.OpenText(Path.Combine(_webHostEnvironment.WebRootPath, "data", "suggested_team_names_1.json"))
+                        .ReadToEnd()
+                );
+                IList<string>? names2 = JsonSerializer.Deserialize<IList<string>>(
+                    System.IO.File.OpenText(Path.Combine(_webHostEnvironment.WebRootPath, "data", "suggested_team_names_2.json"))
+                        .ReadToEnd()
+                );
+                if (names1 == null || names2 == null)
+                {
+                    Team.Name = "Default";
+                } else
+                {
+                    Random rand = new Random();
+                    Team.Name = names1[rand.Next(names1.Count)] + " " + names2[rand.Next(names2.Count)];
+                }
+            }
 
             List<Role> roles = new();
             for (int i = 0; i < RoleCheckedStatuses.Length; i++)
@@ -131,21 +157,21 @@ namespace JamTeamFormingTool.Pages
                 }
                 trackedRoles.Add(trackedRole);
             }
-            Participant.Roles = trackedRoles;
-            Participant.Region = RegionMap[TempRegion!];
-            //Participant.PassCode = PassCode.Generate();
-            Participant.PassCode = "AAAA";
+            Team.OpenRoles = trackedRoles;
+            Team.Region = RegionMap[TempRegion!];
+            //Team.PassCode = PassCode.Generate();
+            Team.PassCode = "AAAA";
 
-            if (!_sessionService.CanRegisterParticipant(Session))
+            if (!_sessionService.CanRegisterTeam(Session))
             {
-                HelpMsg = "Unable to join - session has maxed out on team seekers.";
+                HelpMsg = "Unable to join - session has maxed out on teams.";
                 SubmitStatus = "failure";
                 return Page();
             }
 
-            _context.Participants.Add(Participant);
+            _context.Teams.Add(Team);
             await _context.SaveChangesAsync();
-            HelpMsg = "Successfully joined session! Your participant passcode is " + Participant.PassCode + ". Keep this in your records.";
+            HelpMsg = "Successfully joined session! Your participant passcode is " + Team.PassCode + ". Keep this in your records.";
             SubmitStatus = "success";
 
             return Page();

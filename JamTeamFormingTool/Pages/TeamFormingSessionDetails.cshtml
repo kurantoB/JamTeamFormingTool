@@ -1,8 +1,9 @@
 ﻿@page
+@using JamTeamFormingTool.Models;
 @model JamTeamFormingTool.Pages.TeamFormingSessionDetailsModel
 
 @{
-    ViewData["Title"] = "TeamFormingSessionDetails";
+    ViewData["Title"] = "View team forming session";
 }
 
 @if (Model.IsAdmin)
@@ -53,7 +54,7 @@
                 <span>Team forming</span>
                 @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
                 {
-                    cachedHelpMsg = "Teams and team seekers can now view their matches that are ranked according to compatibility. Participants are taken off the registry as they settle on a match. Registration remains open."
+                    cachedHelpMsg = "Teams and team seekers can now (through clicking Manage) view their matches that are ranked according to compatibility, as well as respond to match invites. Team seekers are taken off the registry as they settle on a match. Registration remains open."
                 }))
             }
         </dd>
@@ -81,6 +82,114 @@
         @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.DeleteButton>(RenderMode.ServerPrerendered, new { Session = Model.JamTeamFormingSession }))
      </div>
 }
+<hr />
+<div>
+    <h5>Registered teams</h5>
+        @if (Model.Teams.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Teams[0].Name)</td>
+                        <td>Looking for</td>
+                        <td>@Html.DisplayNameFor(model => model.Teams[0].Handle)</td>
+                        <td>@Html.DisplayNameFor(model => model.Teams[0].Pitch)</td>
+                        <td>@Html.DisplayNameFor(model => model.Teams[0].Region)</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Team team in Model.Teams)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => team.Name)</td>
+                            <td>
+                                @foreach (Role role in team.OpenRoles)
+                                {
+                                    <div>@role.Name</div>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => team.Handle)</td>
+                            <td>@Html.DisplayFor(modelItem => team.Pitch)</td>
+                            <td>
+                                @if (team.Region != null)
+                                {
+                                    @Model.RegionMap[team.Region ?? Region.NAM_LATAM]
+                                }
+                            </td>
+                            <td>
+                                @if (Model.IsAdmin)
+                                {
+                                    @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.AdminDeleteParticipant>(RenderMode.ServerPrerendered, new
+                                    {
+                                        Session = Model.JamTeamFormingSession,
+                                        AdminPassCode = Model.AdminPassCode,
+                                        TeamID = team.ID,
+                                        TeamName = team.Name
+                                    }))
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        <h5>Registered team seekers</h5>
+        @if (Model.Participants.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Participants[0].Name)</td>
+                        <td>Can fill</td>
+                        <td>@Html.DisplayNameFor(model => model.Participants[0].Handle)</td>
+                        <td>@Html.DisplayNameFor(model => model.Participants[0].Portfolio)</td>
+                        <td>@Html.DisplayNameFor(model => model.Participants[0].Region)</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (Participant participant in Model.Participants)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => participant.Name)</td>
+                        <td>
+                            @foreach (Role role in participant.Roles)
+                            {
+                                <div>@role.Name</div>
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => participant.Handle)</td>
+                        <td>
+                            @if (participant.Portfolio != null)
+                            {
+                                @Html.Raw(participant.Portfolio.Replace("\n", "<br />"))
+                            }
+                        </td>
+                        <td>
+                            @if (participant.Region != null)
+                            {
+                                @Model.RegionMap[participant.Region ?? Region.NAM_LATAM]
+                            }
+                        </td>
+                        <td>
+                            @if (Model.IsAdmin)
+                            {
+                                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.AdminDeleteParticipant>(RenderMode.ServerPrerendered, new
+                                {
+                                    Session = Model.JamTeamFormingSession,
+                                    AdminPassCode = Model.AdminPassCode,
+                                    ParticipantID = participant.ID,
+                                    ParticipantName = participant.Name
+                                }))
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            </table>
+        }
+</div>
 
 <div>
     <a asp-page="./TeamFormingSessionIndex">Back to List</a>

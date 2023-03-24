@@ -1,0 +1,28 @@
+﻿@inject NavigationManager NavigationManager;
+@using Microsoft.AspNetCore.Components.Web;
+
+@if (PageStatus != null)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    @PageStatus
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="(e => { PageStatus = null; ReturnToSession(); })" class="btn btn-primary">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? PageStatus { get; set; }
+
+    public void ReturnToSession()
+    {
+        NavigationManager.NavigateTo("/TeamFormingSessionIndex", true);
+    }
+}

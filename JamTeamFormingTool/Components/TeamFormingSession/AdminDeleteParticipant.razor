@@ -1,0 +1,48 @@
+﻿@using JamTeamFormingTool.Models;
+@using Microsoft.AspNetCore.Components.Web;
+@inject NavigationManager NavigationManager;
+@inject JamTeamFormingTool.Services.JamTeamFormingSessionService TeamFormingSessionService;
+
+<HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => { HelpMsg = null; HelpMsgCallback(); }" />
+
+<button type="button" class="btn btn-secondary" @onclick="Clicked">Delete</button>
+
+@code {
+    [Parameter]
+    public JamTeamFormingSession Session { get; set; }
+
+    [Parameter]
+    public string AdminPassCode { get; set; }
+
+    [Parameter]
+    public int TeamID { get; set; } = -1;
+
+    [Parameter]
+    public string? TeamName { get; set; }
+
+    [Parameter]
+    public int ParticipantID { get; set; } = -1;
+
+    [Parameter]
+    public string? ParticipantName { get; set; }
+
+    public string? HelpMsg { get; set; }
+
+    void Clicked()
+    {
+        if (TeamID != -1)
+        {
+            TeamFormingSessionService.DeleteTeamByID(TeamID);
+            HelpMsg = TeamName + " has been removed from the registry.";
+        } else if (ParticipantID != -1)
+        {
+            TeamFormingSessionService.DeleteParticipantByID(ParticipantID);
+            HelpMsg = ParticipantName + " has been removed from the registry.";
+        }
+    }
+
+    void HelpMsgCallback()
+    {
+        NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + Session.ID + "&adminpasscode=" + AdminPassCode, true);
+    }
+}

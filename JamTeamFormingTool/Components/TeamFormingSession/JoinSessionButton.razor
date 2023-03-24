@@ -58,7 +58,7 @@
         {
             if (Session == null || !SessionService.CanRegisterParticipant(Session))
             {
-                HelpMsg = "Unable to join session - session might have maxed out on participants.";
+                HelpMsg = "Unable to join session - session might have maxed out on team seekers.";
                 return;
             }
             if (GenericPassCode != null)
@@ -67,6 +67,21 @@
             } else
             {
                 NavigationManager.NavigateTo("/TeamSeekerCreate?id=" + Session.ID, true);
+            }
+        } else
+        {
+            if (Session == null || !SessionService.CanRegisterTeam(Session))
+            {
+                HelpMsg = "Unable to join session - session might have maxed out on teams.";
+                return;
+            }
+            if (GenericPassCode != null)
+            {
+                NavigationManager.NavigateTo("/TeamCreate?id=" + Session.ID + "&passcode=" + GenericPassCode, true);
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/TeamCreate?id=" + Session.ID, true);
             }
         }
     }

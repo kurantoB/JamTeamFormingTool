@@ -19,6 +19,14 @@ namespace JamTeamFormingTool.Pages
         public string RoleTemplateName = null!;
         public bool IsAdmin = false;
 
+        public List<Team> Teams = null!;
+        public List<Participant> Participants = null!;
+
+        public Dictionary<Region, string> RegionMap = new() {
+            { Region.NAM_LATAM, "Americas" },
+            { Region.EMEA, "Europe/ Middle East/ Africa" },
+            { Region.APAC, "Asia / Pacific" }
+        };
 
         public TeamFormingSessionDetailsModel(JamTeamFormingTool.Data.MyDBContext context, JamTeamFormingSessionService teamFormingService)
         {
@@ -28,8 +36,9 @@ namespace JamTeamFormingTool.Pages
         
         public JamTeamFormingSession JamTeamFormingSession { get; set; } = default!;
         public string? GenericPassCode;
+        public string? AdminPassCode;
 
-        public async Task<IActionResult> OnGetAsync(int? id, string? passCode)
+        public async Task<IActionResult> OnGetAsync(int? id, string? passCode, string? adminPassCode)
         {
             if (id == null || _context.JamTeamFormingSessions == null)
             {
@@ -55,9 +64,14 @@ namespace JamTeamFormingTool.Pages
             JamTeamFormingSession.AdminPassCode = "";
             JamTeamFormingSession.GenericPassCode = null;
 
-            if (passCode != null && _teamFormingService.AdminPasscodeAttempt(JamTeamFormingSession, passCode)) {
+            if (adminPassCode != null && _teamFormingService.AdminPasscodeAttempt(JamTeamFormingSession, adminPassCode)) {
                 IsAdmin = true;
+                AdminPassCode = adminPassCode;
             }
+
+            Teams = _teamFormingService.GetTeamsForSession(JamTeamFormingSession);
+            Participants = _teamFormingService.GetParticipantsForSession(JamTeamFormingSession);
+
             return Page();
         }
     }
