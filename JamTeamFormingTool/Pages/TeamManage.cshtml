@@ -94,6 +94,16 @@
         </form>
     </div>
 </div>
+<br />
+
+<div>
+    @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.WithdrawButton>(RenderMode.ServerPrerendered, new
+    {
+        SessionID = Model.SessionID,
+        SessionPassCode = Model.SessionPassCode,
+        TeamID = Model.Team.ID
+    }))
+</div>
 
 <div>
     @if (Model.SessionPassCode != null)

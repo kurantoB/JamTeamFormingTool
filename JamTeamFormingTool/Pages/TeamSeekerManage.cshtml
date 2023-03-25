@@ -93,13 +93,22 @@
         </form>
     </div>
 </div>
+<br />
+
+<div>
+    @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.WithdrawButton>(RenderMode.ServerPrerendered, new
+    {
+        SessionID = Model.SessionID,
+        SessionPassCode = Model.SessionPassCode,
+        ParticipantID = Model.Participant.ID
+    }))
+</div>
 
 <div>
     @if (Model.SessionPassCode != null)
     {
         <a asp-page="./TeamFormingSessionDetails" asp-route-id="@Model.SessionID" asp-route-passcode="@Model.SessionPassCode">Back to team forming session</a>
-    }
-    else
+    } else
     {
         <a asp-page="./TeamFormingSessionDetails" asp-route-id="@Model.SessionID">Back to team forming session</a>
     }

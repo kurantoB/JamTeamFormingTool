@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Components.Web;
+@using JamTeamFormingTool.Models;
+@inject JamTeamFormingTool.Services.ParticipantService ParticipantService;
+@inject NavigationManager NavigationManager;
+
+<HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => { HelpMsg = null; HelpMsgCallback(); }" />
+<ConfirmModal confirmMsg="@ConfirmMsg" confirmCallback="() => { ConfirmMsg = null; ConfirmCallback(); }" confirmDeniedCallback="() => ConfirmMsg = null" />
+<button @onclick="Clicked" type="button" class="btn btn-secondary">Delete profile</button>
+
+@code {
+    [Parameter]
+    public int SessionID { get; set; }
+
+    [Parameter]
+    public string? SessionPassCode { get; set; }
+
+    [Parameter]
+    public int ParticipantID { get; set; } = -1;
+
+    [Parameter]
+    public int TeamID { get; set; } = -1;
+
+    public void Clicked()
+    {
+        ConfirmMsg = "This will remove your profile from the team forming session's registry. Are you sure?";
+    }
+
+    public string? ConfirmMsg { get; set; }
+
+    public void ConfirmCallback()
+    {
+        bool success = false;
+        if (ParticipantID != -1)
+        {
+            ParticipantService.DeleteParticipantByID(ParticipantID);
+            success = true;
+        } else if (TeamID != -1)
+        {
+            ParticipantService.DeleteTeamByID(TeamID);
+            success = true;
+        }
+        if (!success)
+        {
+            HelpMsg = "Failed to delete profile.";
+        } else
+        {
+            HelpMsg = "Participant profile has been removed from the registry.";
+            HelpMsgCallback = () =>
+            {
+                if (SessionPassCode != null)
+                {
+                    NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + SessionID + "&passcode=" + SessionPassCode, true);
+                } else
+                {
+                    NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + SessionID, true);
+                }
+            };
+        }
+        StateHasChanged();
+    }
+
+    public string? HelpMsg;
+
+    public Action HelpMsgCallback = () => { };
+}
