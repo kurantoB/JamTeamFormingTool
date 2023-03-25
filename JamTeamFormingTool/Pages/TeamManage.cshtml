@@ -1,72 +1,73 @@
 ﻿@page
-@model JamTeamFormingTool.Pages.TeamSeekerCreateModel
+@model JamTeamFormingTool.Pages.TeamManageModel
 
 @{
-    ViewData["Title"] = "Join session as team seeker";
+    ViewData["Title"] = "Manage Team";
 }
-@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.JoinBadPageStatus>(RenderMode.ServerPrerendered, new
-{
-    PageStatus = Model.PageStatus
-}))
+
 @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.JoinSubmitModal>(RenderMode.ServerPrerendered, new
 {
     HelpMsg = Model.HelpMsg,
     SubmitStatus = Model.SubmitStatus,
-    SessionID = Model.Session.ID,
+    SessionID = Model.SessionID,
     SessionPassCode = Model.SessionPassCode
 }))
 
-<h1>Join team forming session: @Model.Session.Name</h1>
+<h1>Manage team profile</h1>
 
-<h4>Team seeker</h4>
+<h4>@Model.Team.Name</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Team.ID" />
             <div class="form-group">
-                <label asp-for="Participant.Name" class="control-label"></label>
-                <input asp-for="Participant.Name" class="form-control" />
-                <span asp-validation-for="Participant.Name" class="text-danger"></span>
+                <label asp-for="Team.Name" class="control-label"></label>
+                <input asp-for="Team.Name" class="form-control" />
+                <span asp-validation-for="Team.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Participant.Handle" class="control-label"></label>
-                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new {
-                    cachedHelpMsg = "Your contact. E.g. Discord handle/ email/ etc."
-                }))
-                <input asp-for="Participant.Handle" class="form-control" />
-                <span asp-validation-for="Participant.Handle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Participant.Portfolio" class="control-label"></label>
+                <label asp-for="Team.Handle" class="control-label"></label>
                 @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
                 {
-                    cachedHelpMsg = "Links to your previous works. E.g. art, music, games, writing, code."
-                }))<br />
-                <small>Optional</small>
-                <textarea asp-for="Participant.Portfolio" class="form-control"></textarea>
-                <span asp-validation-for="Participant.Portfolio" class="text-danger"></span>
+                    cachedHelpMsg = "The contact for your team. E.g. Discord handle/ email/ etc."
+                }))
+                <input asp-for="Team.Handle" class="form-control" />
+                <span asp-validation-for="Team.Handle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Participant.Region" class="control-label"></label>
+                <label asp-for="Team.Pitch" class="control-label"></label>
+                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                {
+                    cachedHelpMsg = "The general direction you plan to take the project."
+                        + "\nThis can be as broad as it can be. Generally, you shouldn't have to be too specific before a game jam starts."
+                }))<br />
+                <small>Optional</small>
+                <input asp-for="Team.Pitch" class="form-control" />
+                <span asp-validation-for="Team.Pitch" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.Region" class="control-label"></label>
                 <select asp-for="TempRegion" class="form-control">
                     @for (int i = 0; i < Model.RegionMapKeys.Length; i++)
                     {
-                        @if (i == 0)
+                        @if (Model.RegionMap[Model.RegionMapKeys[i]] == Model.Team.Region)
                         {
                             <option value="@Model.RegionMapKeys[i]" selected>@Model.RegionMapKeys[i]</option>
-                        } else
+                        }
+                        else
                         {
                             <option value="@Model.RegionMapKeys[i]">@Model.RegionMapKeys[i]</option>
                         }
                     }
                 </select>
-                <span asp-validation-for="Participant.Region" class="text-danger"></span>
+                <span asp-validation-for="Team.Region" class="text-danger"></span>
             </div>
             <br />
             <div>
                 <p>
-                    <h5>Which roles can you take on?</h5>
+                    <h5>Which roles are open in your team?</h5>
                 </p>
                 @for (int i = 0; i < Model.Roles.Length; i++)
                 {
@@ -77,23 +78,31 @@
                             {
                                 cachedHelpMsg = Model.Roles[i].Description
                             }))
-                        } else
+                        }
+                        else
                         {
                             <input type="checkbox" asp-for="@Model.RoleCheckedStatuses[i]" class="form-check-input"> @Model.Roles[i].Name
                         }
                     </p>
                 }
             </div>
+            <input type="hidden" asp-for="@Model.SessionID" />
             <input type="hidden" asp-for="@Model.SessionPassCode" />
             <div class="form-group">
-                <input type="submit" value="Join" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="TeamFormingSessionDetails" asp-route-id="@Model.Session.ID" asp-route-passcode="@Model.SessionPassCode">Back to Session</a>
+    @if (Model.SessionPassCode != null)
+    {
+        <a asp-page="./TeamFormingSessionDetails" asp-route-id="@Model.SessionID" asp-route-passcode="@Model.SessionPassCode">Back to team forming session</a>
+    } else
+    {
+        <a asp-page="./TeamFormingSessionDetails" asp-route-id="@Model.SessionID">Back to team forming session</a>
+    }
 </div>
 
 <script src="_framework/blazor.server.js"></script>

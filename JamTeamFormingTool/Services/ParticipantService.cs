@@ -37,6 +37,16 @@ namespace JamTeamFormingTool.Services
             return team.PassCode == passCode;
         }
 
+        public JamTeamFormingSession? RetrieveSessionFromParticipant(int participantID)
+        {
+            return _dbContext.Participants.Where(p => p.ID == participantID).Select(p => p.Session).FirstOrDefault();
+        }
+
+        public JamTeamFormingSession? RetrieveSessionFromTeam(int teamID)
+        {
+            return _dbContext.Teams.Where(t => t.ID == teamID).Select(t => t.Session).FirstOrDefault();
+        }
+
         public bool ParticipantCanMatch(JamTeamFormingSession session, Participant participant)
         {
             if (participant.ParticipantMatchRequest != null || participant.TeamMatchRequest != null)
@@ -166,6 +176,50 @@ namespace JamTeamFormingTool.Services
             _dbContext.SaveChanges();
             _dbContext.Participants.Remove(participant);
             _dbContext.SaveChanges();
+        }
+
+        public Participant? ReturnUpdatedTrackedParticipant(Participant participant)
+        {
+            Participant? maybeParticipant = _dbContext.Participants
+                .Where(p => p.ID == participant.ID)
+                .Include(p => p.Roles)
+                .FirstOrDefault();
+            if (maybeParticipant == null)
+            {
+                return null;
+            }
+            maybeParticipant.Name = participant.Name;
+            maybeParticipant.Handle = participant.Handle;
+            maybeParticipant.Portfolio = participant.Portfolio;
+            maybeParticipant.Region = participant.Region;
+            maybeParticipant.Roles.Clear();
+            foreach (Role role in participant.Roles)
+            {
+                maybeParticipant.Roles.Add(role);
+            }
+            return maybeParticipant;
+        }
+
+        public Team ReturnUpdatedTrackedTeam(Team team)
+        {
+            Team? maybeTeam = _dbContext.Teams
+                .Where(t => t.ID == team.ID)
+                .Include(t => t.OpenRoles)
+                .FirstOrDefault();
+            if (maybeTeam == null)
+            {
+                return null;
+            }
+            maybeTeam.Name = team.Name;
+            maybeTeam.Handle = team.Handle;
+            maybeTeam.Pitch = team.Pitch;
+            maybeTeam.Region = team.Region;
+            maybeTeam.OpenRoles.Clear();
+            foreach (Role role in team.OpenRoles)
+            {
+                maybeTeam.OpenRoles.Add(role);
+            }
+            return maybeTeam;
         }
     }
 }

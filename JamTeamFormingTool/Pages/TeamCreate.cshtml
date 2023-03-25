@@ -56,7 +56,7 @@
                 <select asp-for="TempRegion" class="form-control">
                     @for (int i = 0; i < Model.RegionMapKeys.Length; i++)
                     {
-                        if (i == 0)
+                        @if (i == 0)
                         {
                             <option value="@Model.RegionMapKeys[i]" selected>@Model.RegionMapKeys[i]</option>
                         } else
@@ -70,7 +70,7 @@
             <br />
             <div>
                 <p>
-                    <h5>Which roles are open for your team?</h5>
+                    <h5>Which roles are open in your team?</h5>
                 </p>
                 @for (int i = 0; i < Model.Roles.Length; i++)
                 {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JamTeamFormingTool.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20230323083508_Initial-Create")]
+    [Migration("20230325084939_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -1,6 +1,7 @@
 ﻿@using JamTeamFormingTool.Models;
 @using Microsoft.AspNetCore.Components.Web;
 @inject JamTeamFormingTool.Services.ParticipantService ParticipantService;
+@inject NavigationManager NavigationManager;
 
 <button type="button" class="btn btn-primary" @onclick="ManageClicked">Manage</button>
 <HelpMsgModal helpMsg="@HelpMsg" />
@@ -54,20 +55,37 @@
 
     void AccessAttempted()
     {
+        if (Session == null)
+        {
+            return;
+        }
         if (ParticipantID != -1)
         {
-            if (ParticipantService.ParticipantPassCodeAttempt(ParticipantID, PassCode))
+            if (ParticipantService.ParticipantPassCodeAttempt(ParticipantID, PassCode ?? ""))
             {
-                HelpMsg = "Correct passcode.";
+                if (GenericPassCode != null)
+                {
+                    NavigationManager.NavigateTo("/TeamSeekerManage?id=" + ParticipantID + "&passcode=" + PassCode + "&sessionid=" + Session.ID + "&sessionpasscode=" + GenericPassCode, true);
+                } else
+                {
+                    NavigationManager.NavigateTo("/TeamSeekerManage?id=" + ParticipantID + "&passcode=" + PassCode + "&sessionid=" + Session.ID, true);
+                }
             } else
             {
                 HelpMsg = "Incorrect passcode.";
             }
         } else if (TeamID != -1)
         {
-            if (ParticipantService.TeamPassCodeAttempt(TeamID, PassCode))
+            if (ParticipantService.TeamPassCodeAttempt(TeamID, PassCode ?? ""))
             {
-                HelpMsg = "Correct passcode.";
+                if (GenericPassCode != null)
+                {
+                    NavigationManager.NavigateTo("/TeamManage?id=" + TeamID + "&passcode=" + PassCode + "&sessionid=" + Session.ID + "&sessionpasscode=" + GenericPassCode, true);
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/TeamManage?id=" + TeamID + "&passcode=" + PassCode + "&sessionid=" + Session.ID, true);
+                }
             }
             else
             {

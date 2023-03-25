@@ -76,17 +76,18 @@ namespace JamTeamFormingTool.Pages
         [BindProperty]
         public JamTeamFormingSession? Session { get; set; }
         [BindProperty]
-        public Role[] Roles { get; set; }
-        [BindProperty]
-        public bool[] RoleCheckedStatuses { get; set; }
-        [BindProperty]
         public string? HelpMsg { get; set; }
         [BindProperty]
         public string? SubmitStatus { get; set; }
         [BindProperty]
-        public string? TempRegion { get; set; }
-        [BindProperty]
         public bool AssignedName { get; set; }
+        [BindProperty]
+        public bool[] RoleCheckedStatuses { get; set; }
+        [BindProperty]
+        public string? TempRegion { get; set; }
+        
+        [BindProperty]
+        public Role[] Roles { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

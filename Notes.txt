@@ -40,7 +40,7 @@ Programmer (LuaSTG) A bullet hell shoot 'em up game engine.
 Programmer (other)
 Translator
 Voicework provider
-Writer Does not strictly refer to written dialogue.
+Writer
 
 1. The jam host creates a team forming session, kicking off the registration phase. Actual matching does not take place yet.
 2. During the registration phase, pre-made teams with open spots and individual team-seekers register with the created session.
