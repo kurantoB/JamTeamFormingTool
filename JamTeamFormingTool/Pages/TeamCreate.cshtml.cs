@@ -49,12 +49,8 @@ namespace JamTeamFormingTool.Pages
                 PageStatus = "Error retrieving session.";
                 return Page();
             }
-            if (_sessionService.SessionRequiresPassCode(Session) && passCode == null)
-            {
-                PageStatus = "Error retrieving session.";
-                return Page();
-            }
-            if (Session != null && passCode != null && !_sessionService.GenericPasscodeAttempt(Session, passCode))
+            if (_sessionService.SessionRequiresPassCode(Session)
+                && (passCode == null || !_sessionService.GenericPasscodeAttempt(Session, passCode)))
             {
                 PageStatus = "Error retrieving session.";
                 return Page();
@@ -84,7 +80,7 @@ namespace JamTeamFormingTool.Pages
         [BindProperty]
         public bool[] RoleCheckedStatuses { get; set; }
         [BindProperty]
-        public string HelpMsg { get; set; }
+        public string? HelpMsg { get; set; }
         [BindProperty]
         public string? SubmitStatus { get; set; }
         [BindProperty]

@@ -1,7 +1,7 @@
 ﻿@using JamTeamFormingTool.Models;
 @using Microsoft.AspNetCore.Components.Web;
 @inject NavigationManager NavigationManager;
-@inject JamTeamFormingTool.Services.JamTeamFormingSessionService TeamFormingSessionService;
+@inject JamTeamFormingTool.Services.ParticipantService ParticipantService;
 
 <HelpMsgModal helpMsg="@HelpMsg" helpMsgCallback="() => { HelpMsg = null; HelpMsgCallback(); }" />
 
@@ -32,11 +32,11 @@
     {
         if (TeamID != -1)
         {
-            TeamFormingSessionService.DeleteTeamByID(TeamID);
+            ParticipantService.DeleteTeamByID(TeamID);
             HelpMsg = TeamName + " has been removed from the registry.";
         } else if (ParticipantID != -1)
         {
-            TeamFormingSessionService.DeleteParticipantByID(ParticipantID);
+            ParticipantService.DeleteParticipantByID(ParticipantID);
             HelpMsg = ParticipantName + " has been removed from the registry.";
         }
     }

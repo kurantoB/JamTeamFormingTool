@@ -126,9 +126,17 @@
                                         AdminPassCode = Model.AdminPassCode,
                                         TeamID = team.ID,
                                         TeamName = team.Name
-                                    }))
-                                }
-                            </td>
+                                }))
+                            } else
+                            {
+                                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.ManageParticipantButton>(RenderMode.ServerPrerendered, new
+                                {
+                                    Session = Model.JamTeamFormingSession,
+                                    GenericPassCode = Model.GenericPassCode,
+                                    TeamID = team.ID
+                                }))
+                            }
+                        </td>
                         </tr>
                     }
                 </tbody>
@@ -181,6 +189,14 @@
                                     AdminPassCode = Model.AdminPassCode,
                                     ParticipantID = participant.ID,
                                     ParticipantName = participant.Name
+                                }))
+                            } else
+                            {
+                                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.ManageParticipantButton>(RenderMode.ServerPrerendered, new
+                                {
+                                    Session = Model.JamTeamFormingSession,
+                                    GenericPassCode = Model.GenericPassCode,
+                                    ParticipantID = participant.ID
                                 }))
                             }
                         </td>

@@ -55,6 +55,23 @@ namespace JamTeamFormingTool.Pages
             }
             else 
             {
+                if (adminPassCode != null)
+                {
+                    if (_teamFormingService.AdminPasscodeAttempt(jamteamformingsession, adminPassCode))
+                    {
+                        IsAdmin = true;
+                        AdminPassCode = adminPassCode;
+                    } else
+                    {
+                        return NotFound();
+                    }
+                }
+                if (!IsAdmin
+                    && _teamFormingService.SessionRequiresPassCode(jamteamformingsession)
+                    && (passCode == null || !_teamFormingService.GenericPasscodeAttempt(jamteamformingsession, passCode)))
+                {
+                    return NotFound();
+                }
                 JamTeamFormingSession = jamteamformingsession;
                 GenericPassCode = passCode;
             }
@@ -63,11 +80,6 @@ namespace JamTeamFormingTool.Pages
             JamTeamFormingSession.AdminEmail = "";
             JamTeamFormingSession.AdminPassCode = "";
             JamTeamFormingSession.GenericPassCode = null;
-
-            if (adminPassCode != null && _teamFormingService.AdminPasscodeAttempt(JamTeamFormingSession, adminPassCode)) {
-                IsAdmin = true;
-                AdminPassCode = adminPassCode;
-            }
 
             Teams = _teamFormingService.GetTeamsForSession(JamTeamFormingSession);
             Participants = _teamFormingService.GetParticipantsForSession(JamTeamFormingSession);

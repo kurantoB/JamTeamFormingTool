@@ -1,0 +1,78 @@
+﻿@using JamTeamFormingTool.Models;
+@using Microsoft.AspNetCore.Components.Web;
+@inject JamTeamFormingTool.Services.ParticipantService ParticipantService;
+
+<button type="button" class="btn btn-primary" @onclick="ManageClicked">Manage</button>
+<HelpMsgModal helpMsg="@HelpMsg" />
+@if (ShowPassCodePrompt)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    @if (ParticipantID != -1)
+                    {
+                        <p>Enter the team seeker passcode:</p>
+                    } else
+                    {
+                        <p>Enter the team passcode:</p>
+                    }
+                    <p><input type="text" @bind-value="@PassCode" /></p>
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="(e => { ShowPassCodePrompt = false; AccessAttempted(); })" class="btn btn-primary">Go</button>
+                    <button @onclick="(e => ShowPassCodePrompt = false)" class="btn btn-primary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public JamTeamFormingSession? Session { get; set; }
+
+    [Parameter]
+    public string? GenericPassCode { get; set; }
+
+    [Parameter]
+    public int ParticipantID { get; set; } = -1;
+
+    [Parameter]
+    public int TeamID { get; set; } = -1;
+
+    bool ShowPassCodePrompt = false;
+
+    string? PassCode;
+
+    string? HelpMsg;
+
+    void ManageClicked()
+    {
+        ShowPassCodePrompt = true;
+    }
+
+    void AccessAttempted()
+    {
+        if (ParticipantID != -1)
+        {
+            if (ParticipantService.ParticipantPassCodeAttempt(ParticipantID, PassCode))
+            {
+                HelpMsg = "Correct passcode.";
+            } else
+            {
+                HelpMsg = "Incorrect passcode.";
+            }
+        } else if (TeamID != -1)
+        {
+            if (ParticipantService.TeamPassCodeAttempt(TeamID, PassCode))
+            {
+                HelpMsg = "Correct passcode.";
+            }
+            else
+            {
+                HelpMsg = "Incorrect passcode.";
+            }
+        }
+    }
+}

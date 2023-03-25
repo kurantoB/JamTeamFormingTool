@@ -49,7 +49,7 @@
     <h5>
         Coverages@(await Html.RenderComponentAsync<Components.MoreInfo>(RenderMode.ServerPrerendered, new
         {
-            cachedHelpMsg = "If a team match can't be found for a team seeker, the tool will attempt to pair them with another team seeker. To do that, we walk through the list of \"coverages\" to find the most coverage for a given team paradigm."
+            cachedHelpMsg = "In case a team seeker isn't satisfied by their team matches, the tool also attempts to pair them with another team seeker. To do that, we walk through the list of \"coverages\" to find the most coverage for a given team paradigm."
                 + "\n\nEach coverage has a group of \"role categories\". The tool tries to \"satisfy\" as many role categories as it can when pairing team-seekers with each other. A role category is satisfied when any of the roles it contains is \"covered\" by any of the 2 team seekers in a potential pairing."
         }))
     </h5>

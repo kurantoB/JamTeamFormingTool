@@ -4,11 +4,11 @@
 @{
     ViewData["Title"] = "Join session as team seeker";
 }
-@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.TeamJoinPageStatus>(RenderMode.ServerPrerendered, new
+@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.JoinBadPageStatus>(RenderMode.ServerPrerendered, new
 {
     PageStatus = Model.PageStatus
 }))
-@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.TeamFormingSession.JoinSubmitModal>(RenderMode.ServerPrerendered, new
+@(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.JoinSubmitModal>(RenderMode.ServerPrerendered, new
 {
     HelpMsg = Model.HelpMsg,
     SubmitStatus = Model.SubmitStatus,

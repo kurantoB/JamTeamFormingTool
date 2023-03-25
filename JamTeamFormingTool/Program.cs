@@ -9,6 +9,7 @@ builder.Services.AddRazorPages()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.AddTransient<RoleTemplateService>();
 builder.Services.AddTransient<JamTeamFormingSessionService>();
+builder.Services.AddTransient<ParticipantService>();
 builder.Services.AddDbContext<MyDBContext>();
 builder.Services.AddServerSideBlazor();
 
