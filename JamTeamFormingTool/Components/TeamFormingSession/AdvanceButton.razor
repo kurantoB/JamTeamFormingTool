@@ -12,6 +12,9 @@
     [Parameter]
     public JamTeamFormingSession? Session { get; set; }
 
+    [Parameter]
+    public string AdminPassCode { get; set; }
+
     private string? HelpMsg;
     private string? ConfirmMsg;
 
@@ -40,6 +43,6 @@
 
     void ReloadRequested()
     {
-        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        NavigationManager.NavigateTo("/TeamFormingSessionDetails?id=" + Session.ID + "&adminpasscode=" + AdminPassCode, true);
     }
 }

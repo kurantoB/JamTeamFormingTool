@@ -13,7 +13,7 @@
                     <p>You are a -</p>
                 </div>
                 <div class="modal-body">
-                    <button @onclick="(e => { ShowTeamParticipantPrompt = false; JoinInitiated(ParticipationMode.Participant); })" class="btn btn-primary">Team seeker</button> 
+                    <button @onclick="(e => { ShowTeamParticipantPrompt = false; JoinInitiated(ParticipationMode.Participant); })" class="btn btn-primary">Team-seeker</button> 
                     <button @onclick="(e => { ShowTeamParticipantPrompt = false; JoinInitiated(ParticipationMode.Team); })" class="btn btn-primary">Team with open spots</button> 
                     <button @onclick="(e => ShowTeamParticipantPrompt = false)" class="btn btn-primary">Cancel</button>
                 </div>
@@ -58,7 +58,7 @@
         {
             if (Session == null || !SessionService.CanRegisterParticipant(Session))
             {
-                HelpMsg = "Unable to join session - session might have maxed out on team seekers.";
+                HelpMsg = "Unable to join session - session might have maxed out on team-seekers.";
                 return;
             }
             if (GenericPassCode != null)

@@ -138,7 +138,7 @@ namespace JamTeamFormingTool.Pages
 
             if (!_sessionService.CanRegisterParticipant(Session))
             {
-                HelpMsg = "Unable to join - session has maxed out on team seekers.";
+                HelpMsg = "Unable to join - session has maxed out on team-seekers.";
                 SubmitStatus = "failure";
                 return Page();
             }

@@ -1,5 +1,6 @@
 ﻿@using JamTeamFormingTool.Models;
 @using Microsoft.AspNetCore.Components.Web;
+@using Microsoft.AspNetCore.Components.Forms;
 @inject JamTeamFormingTool.Services.ParticipantService ParticipantService;
 
 @if (!MatchesGenerated)
@@ -21,7 +22,7 @@
                                 <td>@TeamMatches[iCopy].Team.Name</td>
                                 <td>@(TeamMatches[iCopy].MatchFigure + "% of team needs fulfilled")</td>
                                 <td>
-                                    <a href="#" @onclick="(e => { TeamMatches[iCopy].Visible = !TeamMatches[iCopy].Visible; })">
+                                    <button type="button" class="btn btn-outline-primary" @onclick="(e => { TeamMatches[iCopy].Visible = !TeamMatches[iCopy].Visible; })">
                                         @if (TeamMatches[iCopy].Visible)
                                         {
                                             <span>Collapse</span>
@@ -29,52 +30,46 @@
                                         {
                                             <span>Expand</span>
                                         }
-                                    </a>
-                                </td>
-                                <td>
-                                    Send match request
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    @if (TeamMatches[iCopy].Visible)
-                    {
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <td>Looking for</td>
-                                    <td>Handle</td>
-                                    <td>Pitch</td>
-                                    <td>Region</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        @foreach (Role role in TeamMatches[iCopy].Team.OpenRoles)
-                                        {
-                                            <div>@role.Name</div>
-                                        }
-                                    </td>
-                                    <td>@TeamMatches[iCopy].Team.Handle</td>
-                                    <td>@TeamMatches[iCopy].Team.Pitch</td>
-                                    @if (TeamMatches[iCopy].Team.Region == null)
+                    <table class="table" style="visibility:@(TeamMatches[iCopy].Visible ? "visible" : "collapse")">
+                        <thead>
+                            <tr>
+                                <td>Looking for</td>
+                                <td>Handle</td>
+                                <td>Pitch</td>
+                                <td>Region</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @foreach (Role role in TeamMatches[iCopy].Team.OpenRoles)
                                     {
-                                        <td></td>
-                                    } else
-                                    {
-                                        <td>@RegionMap[TeamMatches[iCopy].Team.Region ?? Region.NAM_LATAM]</td>
+                                        <div>@role.Name</div>
                                     }
-                                </tr>
-                            </tbody>
-                        </table>
-                    }
+                                </td>
+                                <td>@TeamMatches[iCopy].Team.Handle</td>
+                                <td>@TeamMatches[iCopy].Team.Pitch</td>
+                                @if (TeamMatches[iCopy].Team.Region == null)
+                                {
+                                    <td></td>
+                                } else
+                                {
+                                    <td>@RegionMap[TeamMatches[iCopy].Team.Region ?? Region.NAM_LATAM]</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
                 </li>
             }
         </ol>
         <br />
     }
-    <h4>Team seeker matches</h4>
+    <h4>Team-seeker matches</h4>
     <ol>
         @for (int i = 0; i < ParticipantMatches.Count; i++)
         {
@@ -94,7 +89,7 @@
                                 }
                             </td>
                             <td>
-                                <a href="#" @onclick="(e => { ParticipantMatches[iCopy].Visible = !ParticipantMatches[iCopy].Visible; })">
+                                <button type="button" class="btn btn-outline-primary" @onclick="(e => { ParticipantMatches[iCopy].Visible = !ParticipantMatches[iCopy].Visible; })">
                                     @if (ParticipantMatches[iCopy].Visible)
                                     {
                                         <span>Collapse</span>
@@ -103,56 +98,50 @@
                                     {
                                         <span>Expand</span>
                                     }
-                                </a>
-                            </td>
-                            <td>
-                                Send match request
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                @if (ParticipantMatches[iCopy].Visible)
-                {
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <td>Can fill</td>
-                                <td>Handle</td>
-                                <td>Portfolio</td>
-                                <td>Region</td>
-                            </tr>
-                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    @foreach (Role role in ParticipantMatches[iCopy].Participant.Roles)
-                                    {
-                                        <div>@role.Name</div>
-                                    }
-                                </td>
-                                <td>@ParticipantMatches[iCopy].Participant.Handle</td>
-                                <td>
-                                    @if (ParticipantMatches[iCopy].Participant.Portfolio != null)
-                                    {
-                                        string[] portfolioLines = ParticipantMatches[iCopy].Participant.Portfolio.Split("\n");
-                                        @foreach (string portfolioLine in portfolioLines)
-                                        {
-                                            @portfolioLine<br />
-                                        }
-                                    }
-                                </td>
-                                @if (ParticipantMatches[iCopy].Participant.Region == null)
+                <table class="table" style="visibility:@(ParticipantMatches[iCopy].Visible ? "visible" : "collapse")">
+                    <thead>
+                        <tr>
+                            <td>Can fill</td>
+                            <td>Handle</td>
+                            <td>Portfolio</td>
+                            <td>Region</td>
+                        </tr>
+                        </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @foreach (Role role in ParticipantMatches[iCopy].Participant.Roles)
                                 {
-                                    <td></td>
+                                    <div>@role.Name</div>
                                 }
-                                else
+                            </td>
+                            <td>@ParticipantMatches[iCopy].Participant.Handle</td>
+                            <td>
+                                @if (ParticipantMatches[iCopy].Participant.Portfolio != null)
                                 {
-                                    <td>@RegionMap[ParticipantMatches[iCopy].Participant.Region ?? Region.NAM_LATAM]</td>
+                                    string[] portfolioLines = ParticipantMatches[iCopy].Participant.Portfolio.Split("\n");
+                                    @foreach (string portfolioLine in portfolioLines)
+                                    {
+                                        @portfolioLine<br />
+                                    }
                                 }
-                            </tr>
-                        </tbody>
-                    </table>
-                }
+                            </td>
+                            @if (ParticipantMatches[iCopy].Participant.Region == null)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@RegionMap[ParticipantMatches[iCopy].Participant.Region ?? Region.NAM_LATAM]</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
             </li>
         }
     </ol>
@@ -195,6 +184,8 @@
         { Region.EMEA, "Europe/ Middle East/ Africa" },
         { Region.APAC, "Asia / Pacific" }
     };
+
+    public object Dummy;
 
     void Clicked()
     {

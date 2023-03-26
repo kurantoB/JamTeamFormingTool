@@ -18,8 +18,5 @@ namespace JamTeamFormingTool.Models
         public string? Portfolio { get; set; }
         public Region? Region { get; set; }
         public string PassCode { get; set; } = null!;
-
-        public Participant? ParticipantMatchRequest;
-        public Team? TeamMatchRequest;
     }
 }

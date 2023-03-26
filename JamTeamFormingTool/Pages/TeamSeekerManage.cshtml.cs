@@ -176,7 +176,7 @@ namespace JamTeamFormingTool.Pages
             Participant = _participantService.ReturnUpdatedTrackedParticipant(Participant);
             if (Participant == null)
             {
-                HelpMsg = "Failed to update team seeker.";
+                HelpMsg = "Failed to update team-seeker.";
                 SubmitStatus = "failure";
                 return Page();
             }
@@ -185,7 +185,7 @@ namespace JamTeamFormingTool.Pages
             try
             {
                 await _context.SaveChangesAsync();
-                HelpMsg = "Team seeker profile saved.";
+                HelpMsg = "Team-seeker profile saved.";
                 SubmitStatus = "success";
                 return Page();
             }

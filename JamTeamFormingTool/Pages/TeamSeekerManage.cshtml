@@ -2,7 +2,7 @@
 @model JamTeamFormingTool.Pages.TeamSeekerManageModel
 
 @{
-    ViewData["Title"] = "Manage Team Seeker Profile";
+    ViewData["Title"] = "Manage Team-Seeker Profile";
 }
 
 @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.JoinSubmitModal>(RenderMode.ServerPrerendered, new
@@ -13,7 +13,12 @@
     SessionPassCode = Model.SessionPassCode
 }))
 
-<h1>Manage team seeker profile</h1>
+<h1>Manage team-seeker profile</h1>
+
+@if (Model.CurrentSessionPhase == Models.SessionPhase.TeamForming)
+{
+    <p class="lead text-primary">Click on "Run the matching" to look for teams and team-seekers with the roles that are most compatible with your needs. Reach out privately to any matches using their handle if you're interested in joining up. Remember to delete this profile once you're no longer looking for a team. If you pair up with another team-seeker and there are still open slots in your team, feel free to register with this session again as a team.</p>
+}
 
 <h4>@Model.Participant.Name</h4>
 <hr />

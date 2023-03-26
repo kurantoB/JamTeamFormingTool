@@ -13,7 +13,12 @@ namespace JamTeamFormingTool.Services
             _dbContext = dbContext;
         }
 
-        public bool CanAddNewSession()
+        public bool NoRoleTemplateAvailable()
+        {
+            return _dbContext.RoleTemplates.Count() == 0;
+        }
+
+        public bool CanAddNewSessionOnNumEtnries()
         {
             return _dbContext.JamTeamFormingSessions.Count() < DBConstants.MaxSessions;
         }

@@ -15,6 +15,11 @@
 
 <h1>Manage team profile</h1>
 
+@if (Model.CurrentSessionPhase == Models.SessionPhase.TeamForming)
+{
+    <p class="lead text-primary">Click on "Run the matching" to look for team-seekers with the roles that are most compatible with your needs. Reach out privately to any matches using their handle if you're interested in having them. Remember to update this profile once your team's open slots have changed, or delete it once your team no longer has open slots.</p>
+}
+
 <h4>@Model.Team.Name</h4>
 <hr />
 <div class="row">

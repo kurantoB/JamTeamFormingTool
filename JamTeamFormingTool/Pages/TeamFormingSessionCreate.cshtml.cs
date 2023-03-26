@@ -24,7 +24,11 @@ namespace JamTeamFormingTool.Pages
 
         public IActionResult OnGet()
         {
-            if (!_sessionService.CanAddNewSession())
+            if (_sessionService.NoRoleTemplateAvailable())
+            {
+                PostStatus = "noroletemplates";
+            }
+            if (!_sessionService.CanAddNewSessionOnNumEtnries())
             {
                 PostStatus = "maxedout";
             }

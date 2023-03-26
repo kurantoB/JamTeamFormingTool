@@ -17,6 +17,5 @@ namespace JamTeamFormingTool.Models
         public string? Pitch { get; set; }
         public Region? Region { get; set; }
         public string PassCode { get; set; } = null!;
-        public Participant? ParticipantMatchRequest;
     }
 }

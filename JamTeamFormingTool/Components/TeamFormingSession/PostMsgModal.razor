@@ -26,6 +26,9 @@
                     } else if (ModalPostStatus == "maxedout")
                     {
                         <p>Unable to create: the session limit has been reached.</p>
+                    } else if (ModalPostStatus == "noroletemplates")
+                    {
+                        <p>Unable to create: there are no role templates on record.</p>
                     } else
                     {
                         <p>
@@ -34,7 +37,7 @@
                     }
                 </div>
                 <div class="modal-footer">
-                    @if (ModalPostStatus == "success" || ModalPostStatus == "maxedout")
+                    @if (ModalPostStatus == "success" || ModalPostStatus == "maxedout" || ModalPostStatus == "noroletemplates")
                     {
                         <button type="button" @onclick="(e => { ModalPostStatus = null; ReturnToIndex(); })" class="btn btn-primary">Ok</button>
                     } else

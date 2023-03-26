@@ -10,7 +10,7 @@ namespace JamTeamFormingTool.Models
         public RoleTemplate RoleTemplate { get; set; } = null!;
         [Required]
         [StringLength(60, ErrorMessage = "Coverage name must be 60 characters or fewer.")]
-        public string? Name { get; set; } = null!;
+        public string Name { get; set; } = null!;
         [DisplayName("Role categories")]
         public IList<CoverageSetRoleCategory> RoleCategories { get; set; } = null!;
     }
