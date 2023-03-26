@@ -217,7 +217,7 @@
                 TeamMatches.Add(new TeamWithMatchFigure()
                 {
                     Team = team,
-                    MatchFigure = Math.Round(matchFigure * 100, 2),
+                    MatchFigure = Math.Round(matchFigure * 100),
                 });
             }
             TeamMatches.Sort((x, y) => -x.MatchFigure.CompareTo(y.MatchFigure));
@@ -242,7 +242,7 @@
                 ParticipantMatches.Add(new ParticipantWithMatchFigure()
                     {
                         Participant = participant,
-                        MatchFigure = Math.Round(matchFigure * 100, 2)
+                        MatchFigure = Math.Round(matchFigure * 100)
                     });
             }
         } else
@@ -288,7 +288,7 @@
                 ParticipantMatches.Add(new ParticipantWithMatchFigure()
                 {
                     Participant = participant,
-                    MatchFigure = Math.Round(maxMatchFigure * 100, 2),
+                    MatchFigure = Math.Round(maxMatchFigure * 100),
                     Coverages = maxMatchFigureCoverages
                 });
             }
