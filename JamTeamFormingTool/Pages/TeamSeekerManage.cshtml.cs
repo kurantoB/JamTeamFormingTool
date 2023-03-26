@@ -69,6 +69,8 @@ namespace JamTeamFormingTool.Pages
         [BindProperty]
         public string? SubmitStatus { get; set; }
 
+        public SessionPhase CurrentSessionPhase { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id, string? passCode, int? sessionID, string? sessionPassCode)
         {
             if (id == null || sessionID == null || passCode == null || _context.Participants == null)
@@ -108,6 +110,15 @@ namespace JamTeamFormingTool.Pages
                 {
                     RoleCheckedStatuses[i] = true;
                 }
+            }
+
+            SessionPhase? sessionPhase = _participantService.GetParticipantSessionPhase(Participant.ID);
+            if (sessionPhase == null)
+            {
+                return NotFound();
+            } else
+            {
+                CurrentSessionPhase = sessionPhase ?? SessionPhase.Registration;
             }
 
             return Page();

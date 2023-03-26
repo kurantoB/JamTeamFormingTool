@@ -44,18 +44,22 @@
         <dd class="col-sm-10">
             @if (Model.JamTeamFormingSession.Phase == Models.SessionPhase.Registration)
             {
-                <span>Registration</span>
-                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
-                {
-                    cachedHelpMsg = "Actual matching has not taken place yet. Pre-made teams with open spots and individual team-seekers are to register and wait for the session to advance to the team forming phase."
-                }))
+                <mark>
+                    Registration
+                    @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                    {
+                        cachedHelpMsg = "Actual matching has not taken place yet. Pre-made teams with open spots and individual team-seekers are to register and wait for the session to advance to the team forming phase."
+                    }))
+                </mark>
             } else
             {
-                <span>Team forming</span>
-                @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
-                {
-                    cachedHelpMsg = "Teams and team seekers can now (through clicking Manage) view their matches that are ranked according to compatibility, as well as respond to match invites. Team seekers are taken off the registry as they settle on a match. Registration remains open."
-                }))
+                <mark>
+                    Team forming
+                    @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.MoreInfo>(RenderMode.ServerPrerendered, new
+                    {
+                        cachedHelpMsg = "Teams and team seekers can now (through clicking Manage) view their matches that are ranked according to compatibility, as well as respond to match invites. Team seekers are taken off the registry as they settle on a match. Registration remains open."
+                    }))
+                </mark>
             }
         </dd>
     </dl>

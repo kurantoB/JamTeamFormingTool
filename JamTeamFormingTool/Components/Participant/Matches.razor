@@ -1,0 +1,300 @@
+﻿@using JamTeamFormingTool.Models;
+@using Microsoft.AspNetCore.Components.Web;
+@inject JamTeamFormingTool.Services.ParticipantService ParticipantService;
+
+@if (!MatchesGenerated)
+{
+    <button @onclick="Clicked" type="button" class="btn btn-primary">Run the matching</button>
+} else
+{
+    @if (ParticipantID != -1)
+    {
+        <h4>Team matches</h4>
+        <ol>
+            @for (int i = 0; i < TeamMatches.Count; i++)
+            {
+                int iCopy = i;
+                <li>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>@TeamMatches[iCopy].Team.Name</td>
+                                <td>@(TeamMatches[iCopy].MatchFigure + "% of team needs fulfilled")</td>
+                                <td>
+                                    <a href="#" @onclick="(e => { TeamMatches[iCopy].Visible = !TeamMatches[iCopy].Visible; })">
+                                        @if (TeamMatches[iCopy].Visible)
+                                        {
+                                            <span>Collapse</span>
+                                        } else
+                                        {
+                                            <span>Expand</span>
+                                        }
+                                    </a>
+                                </td>
+                                <td>
+                                    Send match request
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @if (TeamMatches[iCopy].Visible)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>Looking for</td>
+                                    <td>Handle</td>
+                                    <td>Pitch</td>
+                                    <td>Region</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @foreach (Role role in TeamMatches[iCopy].Team.OpenRoles)
+                                        {
+                                            <div>@role.Name</div>
+                                        }
+                                    </td>
+                                    <td>@TeamMatches[iCopy].Team.Handle</td>
+                                    <td>@TeamMatches[iCopy].Team.Pitch</td>
+                                    @if (TeamMatches[iCopy].Team.Region == null)
+                                    {
+                                        <td></td>
+                                    } else
+                                    {
+                                        <td>@RegionMap[TeamMatches[iCopy].Team.Region ?? Region.NAM_LATAM]</td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                </li>
+            }
+        </ol>
+        <br />
+    }
+    <h4>Team seeker matches</h4>
+    <ol>
+        @for (int i = 0; i < ParticipantMatches.Count; i++)
+        {
+            int iCopy = i;
+            <li>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>@ParticipantMatches[iCopy].Participant.Name</td>
+                            <td>
+                                @if (ParticipantID != -1)
+                                {
+                                    @("Best coverage: " + string.Join(", ", ParticipantMatches[iCopy].Coverages.ToArray()) + " (" + ParticipantMatches[iCopy].MatchFigure + "%)")
+                                } else
+                                {
+                                    @(ParticipantMatches[iCopy].MatchFigure + "% of team needs fulfilled")
+                                }
+                            </td>
+                            <td>
+                                <a href="#" @onclick="(e => { ParticipantMatches[iCopy].Visible = !ParticipantMatches[iCopy].Visible; })">
+                                    @if (ParticipantMatches[iCopy].Visible)
+                                    {
+                                        <span>Collapse</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Expand</span>
+                                    }
+                                </a>
+                            </td>
+                            <td>
+                                Send match request
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                @if (ParticipantMatches[iCopy].Visible)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>Can fill</td>
+                                <td>Handle</td>
+                                <td>Portfolio</td>
+                                <td>Region</td>
+                            </tr>
+                         </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @foreach (Role role in ParticipantMatches[iCopy].Participant.Roles)
+                                    {
+                                        <div>@role.Name</div>
+                                    }
+                                </td>
+                                <td>@ParticipantMatches[iCopy].Participant.Handle</td>
+                                <td>
+                                    @if (ParticipantMatches[iCopy].Participant.Portfolio != null)
+                                    {
+                                        string[] portfolioLines = ParticipantMatches[iCopy].Participant.Portfolio.Split("\n");
+                                        @foreach (string portfolioLine in portfolioLines)
+                                        {
+                                            @portfolioLine<br />
+                                        }
+                                    }
+                                </td>
+                                @if (ParticipantMatches[iCopy].Participant.Region == null)
+                                {
+                                    <td></td>
+                                }
+                                else
+                                {
+                                    <td>@RegionMap[ParticipantMatches[iCopy].Participant.Region ?? Region.NAM_LATAM]</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </li>
+        }
+    </ol>
+}
+
+@code {
+
+    [Parameter]
+    public int ParticipantID { get; set; } = -1;
+
+    [Parameter]
+    public int TeamID { get; set; } = -1;
+
+    [Parameter]
+    public int SessionID { get; set; } = -1;
+
+    public class ParticipantWithMatchFigure
+    {
+        public Participant Participant { get; set; }
+        public double MatchFigure { get; set; }
+        public List<string>? Coverages { get; set; }
+        public bool Visible { get; set; }
+    }
+
+    public class TeamWithMatchFigure
+    {
+        public Team Team { get; set; }
+        public double MatchFigure { get; set; }
+        public bool Visible { get; set; }
+    }
+
+    public bool MatchesGenerated { get; set; }
+
+    public List<TeamWithMatchFigure> TeamMatches { get; set; } = new();
+
+    public List<ParticipantWithMatchFigure> ParticipantMatches { get; set; } = new();
+
+    public Dictionary<Region, string> RegionMap = new() {
+        { Region.NAM_LATAM, "Americas" },
+        { Region.EMEA, "Europe/ Middle East/ Africa" },
+        { Region.APAC, "Asia / Pacific" }
+    };
+
+    void Clicked()
+    {
+        if (ParticipantID != -1)
+        {
+            IEnumerable<int> teamRoleIDs = ParticipantService.RetrieveAllRolesForParticipant(ParticipantID).Select(r => r.ID);
+            List<Team> retrievedTeams = ParticipantService.RetrieveAllTeamsInSession(SessionID);
+            foreach (Team team in retrievedTeams)
+            {
+                int teamRoleCount = team.OpenRoles.Count;
+                int coveredRoleCount = 0;
+                foreach (Role role in team.OpenRoles)
+                {
+                    if (teamRoleIDs.Contains(role.ID))
+                    {
+                        coveredRoleCount += 1;
+                    }
+                }
+                double matchFigure = Convert.ToDouble(coveredRoleCount) / teamRoleCount;
+                TeamMatches.Add(new TeamWithMatchFigure()
+                {
+                    Team = team,
+                    MatchFigure = Math.Round(matchFigure * 100, 2),
+                });
+            }
+            TeamMatches.Sort((x, y) => -x.MatchFigure.CompareTo(y.MatchFigure));
+        }
+
+        List<Participant> retrievedParticipants = ParticipantService.RetrieveAllOtherParticipantsInSession(SessionID, ParticipantID);
+        if (TeamID != -1)
+        {
+            IEnumerable<int> teamRoleIDs = ParticipantService.RetrieveAllOpenRolesForTeam(TeamID).Select(r => r.ID);
+            int teamRoleCount = teamRoleIDs.Count();
+            foreach (Participant participant in retrievedParticipants)
+            {
+                int coveredRoleCount = 0;
+                foreach (Role role in participant.Roles)
+                {
+                    if (teamRoleIDs.Contains(role.ID))
+                    {
+                        coveredRoleCount += 1;
+                    }
+                }
+                double matchFigure = Convert.ToDouble(coveredRoleCount) / teamRoleCount;
+                ParticipantMatches.Add(new ParticipantWithMatchFigure()
+                    {
+                        Participant = participant,
+                        MatchFigure = Math.Round(matchFigure * 100, 2)
+                    });
+            }
+        } else
+        {
+            List<CoverageSet> coverages = ParticipantService.RetrieveCoveragesForSession(SessionID);
+            IEnumerable<int> thisParticipantRoleIDs = ParticipantService.RetrieveAllRolesForParticipant(ParticipantID).Select(r => r.ID);
+            foreach (Participant participant in retrievedParticipants)
+            {
+                Dictionary<CoverageSet, double> coverageToMatchFigure = new();
+                double maxMatchFigure = 0;
+                IEnumerable<int> otherParticipantRoleIDs = participant.Roles.Select(r => r.ID);
+                foreach (CoverageSet coverage in coverages)
+                {
+                    int roleCategoriesCount = coverage.RoleCategories.Count;
+                    int coveredRoleCategoriesCount = 0;
+                    foreach (CoverageSetRoleCategory roleCategory in coverage.RoleCategories)
+                    {
+                        foreach (Role roleCategoryRole in roleCategory.Roles)
+                        {
+                            if (thisParticipantRoleIDs.Contains(roleCategoryRole.ID)
+                                || otherParticipantRoleIDs.Contains(roleCategoryRole.ID))
+                            {
+                                coveredRoleCategoriesCount += 1;
+                                break;
+                            }
+                        }
+                    }
+                    double matchFigure = Convert.ToDouble(coveredRoleCategoriesCount) / roleCategoriesCount;
+                    if (matchFigure > maxMatchFigure)
+                    {
+                        maxMatchFigure = matchFigure;
+                    }
+                    coverageToMatchFigure.Add(coverage, matchFigure);
+                }
+                List<string> maxMatchFigureCoverages = new();
+                foreach (CoverageSet coverage in coverageToMatchFigure.Keys)
+                {
+                    if (coverageToMatchFigure[coverage] == maxMatchFigure)
+                    {
+                        maxMatchFigureCoverages.Add(coverage.Name);
+                    }
+                }
+                ParticipantMatches.Add(new ParticipantWithMatchFigure()
+                {
+                    Participant = participant,
+                    MatchFigure = Math.Round(maxMatchFigure * 100, 2),
+                    Coverages = maxMatchFigureCoverages
+                });
+            }
+        }
+        ParticipantMatches.Sort((x, y) => -x.MatchFigure.CompareTo(y.MatchFigure));
+
+        MatchesGenerated = true;
+    }
+}

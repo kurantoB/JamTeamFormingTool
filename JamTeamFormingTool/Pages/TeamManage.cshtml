@@ -105,6 +105,18 @@
     }))
 </div>
 
+@if (Model.CurrentSessionPhase == Models.SessionPhase.TeamForming)
+{
+    <br />
+    <hr />
+    @(await Html.RenderComponentAsync<JamTeamFormingTool.Components.Participant.Matches>(RenderMode.ServerPrerendered, new
+    {
+        TeamID = Model.Team.ID,
+        SessionID = Model.SessionID,
+    }))
+    <hr />
+}
+
 <div>
     @if (Model.SessionPassCode != null)
     {
