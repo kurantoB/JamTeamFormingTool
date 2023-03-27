@@ -15,11 +15,11 @@ namespace JamTeamFormingTool.Migrations
                 name: "RoleTemplates",
                 columns: table => new
                 {
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsStaged = table.Column<bool>(type: "bit", nullable: false),
-                    AuthorizePassCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    IsStaged = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AuthorizePassCode = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,10 +30,10 @@ namespace JamTeamFormingTool.Migrations
                 name: "CoverageSets",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleTemplateName = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleTemplateName = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,16 +50,16 @@ namespace JamTeamFormingTool.Migrations
                 name: "JamTeamFormingSessions",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleTemplateName = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Info = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Phase = table.Column<int>(type: "int", nullable: false),
-                    AdminEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdminPassCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GenericPassCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleTemplateName = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Info = table.Column<string>(type: "TEXT", maxLength: 120, nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Phase = table.Column<int>(type: "INTEGER", nullable: false),
+                    AdminEmail = table.Column<string>(type: "TEXT", nullable: false),
+                    AdminPassCode = table.Column<string>(type: "TEXT", nullable: false),
+                    GenericPassCode = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,11 +76,11 @@ namespace JamTeamFormingTool.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleTemplateName = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: true)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleTemplateName = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 120, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,9 +97,9 @@ namespace JamTeamFormingTool.Migrations
                 name: "CoverageSetRoleCategories",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CoverageSetID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CoverageSetID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,14 +116,14 @@ namespace JamTeamFormingTool.Migrations
                 name: "Participants",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SessionID = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Handle = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Portfolio = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Region = table.Column<int>(type: "int", nullable: true),
-                    PassCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SessionID = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false),
+                    Handle = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false),
+                    Portfolio = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    Region = table.Column<int>(type: "INTEGER", nullable: true),
+                    PassCode = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,14 +140,14 @@ namespace JamTeamFormingTool.Migrations
                 name: "Teams",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SessionID = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Handle = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Pitch = table.Column<string>(type: "nvarchar(280)", maxLength: 280, nullable: true),
-                    Region = table.Column<int>(type: "int", nullable: true),
-                    PassCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    SessionID = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    Handle = table.Column<string>(type: "TEXT", maxLength: 60, nullable: false),
+                    Pitch = table.Column<string>(type: "TEXT", maxLength: 280, nullable: true),
+                    Region = table.Column<int>(type: "INTEGER", nullable: true),
+                    PassCode = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,8 +164,8 @@ namespace JamTeamFormingTool.Migrations
                 name: "RoleCategoryRole",
                 columns: table => new
                 {
-                    RoleCategoriesID = table.Column<int>(type: "int", nullable: false),
-                    RolesID = table.Column<int>(type: "int", nullable: false)
+                    RoleCategoriesID = table.Column<int>(type: "INTEGER", nullable: false),
+                    RolesID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,8 +187,8 @@ namespace JamTeamFormingTool.Migrations
                 name: "ParticipantRole",
                 columns: table => new
                 {
-                    ParticipantsID = table.Column<int>(type: "int", nullable: false),
-                    RolesID = table.Column<int>(type: "int", nullable: false)
+                    ParticipantsID = table.Column<int>(type: "INTEGER", nullable: false),
+                    RolesID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -210,8 +210,8 @@ namespace JamTeamFormingTool.Migrations
                 name: "TeamRole",
                 columns: table => new
                 {
-                    OpenRolesID = table.Column<int>(type: "int", nullable: false),
-                    TeamsID = table.Column<int>(type: "int", nullable: false)
+                    OpenRolesID = table.Column<int>(type: "INTEGER", nullable: false),
+                    TeamsID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

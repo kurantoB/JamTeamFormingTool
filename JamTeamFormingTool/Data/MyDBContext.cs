@@ -13,10 +13,22 @@ namespace JamTeamFormingTool.Data
         public DbSet<RoleTemplate> RoleTemplates { get; set; } = null!;
         public DbSet<Team> Teams { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=JamTeamFormingTool");
+        public string DbPath { get; }
+
+        public MyDBContext(IWebHostEnvironment webHostEnvironment) {
+            DbPath = System.IO.Path.Join(webHostEnvironment.WebRootPath, "jamteamformingtool.db");
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=JamTeamFormingTool");
+        //optionsBuilder.UseSqlServer(@"Server=tcp:jamteamformingtooldbserver.database.windows.net,1433;Initial Catalog=JamTeamFormingTool_db;Persist Security Info=False;User ID=jamteamformingtooladmin;Password=JamTeamFormingTool!1;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+        //}
+
+        // The following configures EF to create a Sqlite database file in the
+        // special "local" folder for your platform.
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlite($"Data Source={DbPath}");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
