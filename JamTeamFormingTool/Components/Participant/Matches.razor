@@ -47,7 +47,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    @foreach (Role role in TeamMatches[iCopy].Team.OpenRoles)
+                                    @foreach (Role role in TeamMatches[iCopy].Team.OpenRoles.OrderBy(r => r.Name))
                                     {
                                         <div>@role.Name</div>
                                     }
@@ -115,7 +115,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                @foreach (Role role in ParticipantMatches[iCopy].Participant.Roles)
+                                @foreach (Role role in ParticipantMatches[iCopy].Participant.Roles.OrderBy(r => r.Name))
                                 {
                                     <div>@role.Name</div>
                                 }
