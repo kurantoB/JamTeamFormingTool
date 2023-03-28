@@ -16,7 +16,7 @@ namespace JamTeamFormingTool.Data
         public string DbPath { get; }
 
         public MyDBContext(IWebHostEnvironment webHostEnvironment) {
-            DbPath = System.IO.Path.Join(webHostEnvironment.WebRootPath, "jamteamformingtool.db");
+            DbPath = "./Data/jamteamformingtool.db";
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
