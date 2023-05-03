@@ -1,0 +1,9 @@
+﻿To access ./Data/jamteamformingtool.db
+
+Go to https://jamteamformingtool20230326211604.scm.azurewebsites.net/
+
+Go to Debug console >> PowerShell. Now the site directory is visible
+
+Go to site >> wwwroot >> Data and download jamteamformingtool.db
+
+Open the file with https://sqliteviewer.app/
