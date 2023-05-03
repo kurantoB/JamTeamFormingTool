@@ -36,12 +36,12 @@ namespace JamTeamFormingTool.Services
         public void RegisterSession(JamTeamFormingSession session, bool isInviteOnly)
         {
             session.Phase = SessionPhase.Registration;
-            //session.AdminPassCode = PassCode.Generate();
-            session.AdminPassCode = "XXXX";
+            session.AdminPassCode = PassCode.Generate();
+            //session.AdminPassCode = "XXXX";
             if (isInviteOnly)
             {
-                //session.GenericPassCode = PassCode.Generate();
-                session.GenericPassCode = "AAAA";
+                session.GenericPassCode = PassCode.Generate();
+                //session.GenericPassCode = "AAAA";
             }
             _dbContext.JamTeamFormingSessions.Add(session);
             _dbContext.SaveChanges();

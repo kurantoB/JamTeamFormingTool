@@ -38,8 +38,8 @@ namespace JamTeamFormingTool.Services
         public void RegisterStaged(RoleTemplate roleTemplate)
         {
             roleTemplate.IsStaged = true;
-            //roleTemplate.AuthorizePassCode = PassCode.Generate();
-            roleTemplate.AuthorizePassCode = "AAAA";
+            roleTemplate.AuthorizePassCode = PassCode.Generate();
+            //roleTemplate.AuthorizePassCode = "AAAA";
             _dbContext.RoleTemplates.Add(roleTemplate);
             _dbContext.SaveChanges();
         }
