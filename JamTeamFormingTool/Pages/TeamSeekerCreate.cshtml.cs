@@ -133,8 +133,8 @@ namespace JamTeamFormingTool.Pages
             }
             Participant.Roles = trackedRoles;
             Participant.Region = RegionMap[TempRegion!];
-            //Participant.PassCode = PassCode.Generate();
-            Participant.PassCode = "AAAA";
+            Participant.PassCode = PassCode.Generate();
+            //Participant.PassCode = "AAAA";
 
             if (!_sessionService.CanRegisterParticipant(Session))
             {

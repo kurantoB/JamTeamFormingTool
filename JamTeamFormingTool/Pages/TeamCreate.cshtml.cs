@@ -156,8 +156,8 @@ namespace JamTeamFormingTool.Pages
             }
             Team.OpenRoles = trackedRoles;
             Team.Region = RegionMap[TempRegion!];
-            //Team.PassCode = PassCode.Generate();
-            Team.PassCode = "AAAA";
+            Team.PassCode = PassCode.Generate();
+            //Team.PassCode = "AAAA";
 
             if (!_sessionService.CanRegisterTeam(Session))
             {
