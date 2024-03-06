@@ -1,4 +1,6 @@
-﻿To access ./Data/jamteamformingtool.db
+﻿===
+
+To access ./Data/jamteamformingtool.db (Azure method)
 
 Go to https://jamteamformingtool20230326211604.scm.azurewebsites.net/
 
@@ -7,3 +9,29 @@ Go to Debug console >> PowerShell. Now the site directory is visible
 Go to site >> wwwroot >> Data and download jamteamformingtool.db
 
 Open the file with https://sqliteviewer.app/
+
+===
+
+Old Zone Records
+
+Name: www.jamteamforming.space.
+Type: CNAME
+Record: jamteamformingtool20230326211604.azurewebsites.net
+
+Name: jamteamforming.space.
+Type: A
+Record: 20.119.0.5
+
+===
+
+New Zone Records
+
+===
+
+Google Cloud Compute
+
+Uploading local files:
+gcloud compute scp [LOCAL_FILE(s)] [VM_NAME]:[REMOTE_DIRECTORY]
+
+Restarting nginx:
+sudo systemctl restart nginx
