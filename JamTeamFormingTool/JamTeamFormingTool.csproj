@@ -29,10 +29,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\jamteamformingtool.db">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
