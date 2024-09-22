@@ -13,7 +13,6 @@ builder.Services.AddTransient<ParticipantService>();
 builder.Services.AddDbContext<MyDBContext>();
 builder.Services.AddServerSideBlazor();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
