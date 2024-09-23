@@ -14,7 +14,7 @@ Wait, there's more.
 
 There's no guarantee that every team seeker can find a team, and given that a good many participants have skills to contribute (usually, more numerous than there are open roles), it would be remiss to see these diverse skills go to waste.
 
-The good news is that project can be categorized into a set number of types. Each type of project requires its own collection of required skills and capacities. Wouldn't it be nice if a participant with skills to contribute can see which project "type" they are most fit for, and which participant (out of the many) would best be paired with them to fulfill the requirements of this project type? Wow, that was a mouthful. Anyway, yes. The answer is yes. And we can do that here, also.
+The good news is that projects can be categorized into a set number of types. Each type of project requires its own collection of required skills and capacities. Wouldn't it be nice if a participant with skills to contribute can see which project "type" they are most fit for, and which participant (out of the many) would best be paired with them to fulfill the requirements of this project type? Wow, that was a mouthful. Anyway, yes. The answer is yes. And we can do that here, also.
 
 ## What is this really
 
