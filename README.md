@@ -34,7 +34,7 @@ To use this tool, first you need a **team forming session**. (They represent a d
 
 <hr/>
 
-Let's take a step back because a team forming session needs to based off a **role template**. (A role template is a collection of **roles** that are available for this team forming session, e.g. artist, composer, writer, etc.)
+Let's take a step back because a team forming session needs to be based off a **role template**. (A role template is a collection of **roles** that are available for this team forming session, e.g. artist, composer, writer, etc.)
 
 ![image](https://github.com/user-attachments/assets/ec42de13-35bb-47c1-92a6-be3097462d29)
 
