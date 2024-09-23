@@ -2,7 +2,7 @@
 
 ## What is this
 
-'Tis but a simple groupwork match-making tool, borne of the hectic chaos of game jam team-forming process.
+'Tis but a simple groupwork match-making tool, borne of the hectic chaos of the game jam team-forming process.
 
 It works, how? Say you have a bunch of people of a diverse assortment of skills and talents to lend to jam projects. You have, also, a bunch of teams in want of specific roles. Keyword: Bunch. The tool works best if you have a good-sized pool of people willing to partake, who would otherwise flood the channels with portfolios and team pitches - I'm talking specifically about the case where backlogging is time-consuming and choice-paralysis-ing.
 
