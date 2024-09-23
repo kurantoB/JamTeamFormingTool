@@ -8,7 +8,7 @@ It works, how? Say you have a bunch of people of a diverse assortment of skills 
 
 With this premise, given these prancing grounds, it would do well to, dare I say, let loose an algorithm.
 
-So yeah, this tool takes people's needs and capacities into account, so the options for welcoming teams / aspiring team joinees can more precisely determined from the perspective of each party.
+So yeah, this tool takes people's needs and capacities into account, so the options for welcoming teams / aspiring team inductees can be more precisely determined from the perspective of each party.
 
 Wait, there's more.
 
