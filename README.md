@@ -40,7 +40,7 @@ Let's take a step back because a team forming session needs to based off a **rol
 
 <hr/>
 
-Role templates also contain information on project types, under a section known as **coverages**. Each type contains a list of **role categories**, which are themselves lists of roles that, if *any one of them a given list* exist in a team, would provide coverage for that role category.
+Role templates also contain information on project types, under a section known as **coverages**. Each type contains a list of **role categories**, which are themselves lists of roles that, if *any one of them in a given list* exist in a team, would provide coverage for that role category.
 
 ![image](https://github.com/user-attachments/assets/5cf03a23-5bab-4221-836f-b5453090a18a)
 
